@@ -1,0 +1,771 @@
+geneid,term
+LmxM.01.0060,mitochondrial ribosome
+LmxM.01.0160,Pre-mRNA Splicing Machinery
+LmxM.01.0190,Pre-mRNA Splicing Machinery
+LmxM.01.0350,Kinetochore
+LmxM.01.0560,Pre-mRNA Splicing Machinery
+LmxM.01.0590,editosome
+LmxM.01.0640,chromatin associated complex
+LmxM.02.0370,proteasome
+LmxM.02.0370,proteasome
+LmxM.02.0410,editosome
+LmxM.02.0610,Kinetochore
+LmxM.02.0680,RNA pol complexes
+LmxM.02.0710,chromatin associated complex
+LmxM.03.0150,mitochondrial ribosome
+LmxM.03.0190,Pre-mRNA Splicing Machinery
+LmxM.03.0220,mitochondrial ribosome
+LmxM.03.0250,ribosome
+LmxM.03.0520,Pre-mRNA Splicing Machinery
+LmxM.03.0540,proteasome
+LmxM.03.0540,proteasome
+LmxM.03.0540,proteasome
+LmxM.03.0620,editosome
+LmxM.03.0630,mitochondrial ribosome
+LmxM.03.0790,RNA pol complexes
+LmxM.03.0910,acidocalcisome
+LmxM.03.0910,acidocalcisome
+LmxM.04.0045,mitochondrial ribosome
+LmxM.04.0270,mitochondrial ribosome
+LmxM.04.0470,ribosome
+LmxM.04.0470,ribosome
+LmxM.04.0750,ribosome
+LmxM.04.0750,ribosome
+LmxM.04.0860,mitochondrial ribosome
+LmxM.04.0950,ribosome
+LmxM.04.0950,ribosome
+LmxM.04.1170,Pre-mRNA Splicing Machinery
+LmxM.05.0010,Kinetochore
+LmxM.05.0060,vault
+LmxM.05.0100,Kinetochore
+LmxM.05.0190,CRKT complex
+LmxM.05.0340,mitochondrial ribosome
+LmxM.05.0540,Pre-mRNA Splicing Machinery
+LmxM.05.0860,mitochondrial ribosome
+LmxM.05.0890,Pre-mRNA Splicing Machinery
+LmxM.05.1140,acidocalcisome
+LmxM.05.1160,chromatin associated complex
+LmxM.05.1200,chromatin associated complex
+LmxM.05.1210,chromatin associated complex
+LmxM.06.0010,RNA pol complexes
+LmxM.06.0040,mitochondrial ribosome
+LmxM.06.0140,proteasome
+LmxM.06.0140,proteasome
+LmxM.06.0140,proteasome
+LmxM.06.0200,Kinetochore
+LmxM.06.0210,Kinetochore
+LmxM.06.0410,ribosome
+LmxM.06.0415,ribosome
+LmxM.06.0570,ribosome
+LmxM.06.0580,ribosome
+LmxM.07.0020,Pre-mRNA Splicing Machinery
+LmxM.07.0070,mitochondrial ribosome
+LmxM.07.0080,acidocalcisome
+LmxM.07.0220,RNA pol complexes
+LmxM.07.0420,mitochondrial ribosome
+LmxM.07.0450,mitochondrial ribosome
+LmxM.07.0500,ribosome
+LmxM.07.0500,ribosome
+LmxM.07.0510,ribosome
+LmxM.07.0510,ribosome
+LmxM.07.0630,acidocalcisome
+LmxM.07.0650,acidocalcisome
+LmxM.07.0743,chromatin associated complex
+LmxM.07.0870,RNA pol complexes
+LmxM.07.0870,Pre-mRNA Splicing Machinery
+LmxM.07.0870,RNA pol complexes
+LmxM.07.1070,editosome
+LmxM.07.1110,RNA pol complexes
+LmxM.07.1120,proteasome
+LmxM.07.1120,proteasome
+LmxM.07.1120,proteasome
+LmxM.08.0090,acidocalcisome
+LmxM.08.0120,mitochondrial ribosome
+LmxM.08.0240,mitochondrial ribosome
+LmxM.08.0430,RNA pol complexes
+LmxM.08.0560,mitochondrial ribosome
+LmxM.08.0920,mitochondrial ribosome
+LmxM.08.1222,RNA pol complexes
+LmxM.08_29.0020,RNA pol complexes
+LmxM.08_29.0020,RNA pol complexes
+LmxM.08_29.0030,mitochondrial ribosome
+LmxM.08_29.0120,proteasome
+LmxM.08_29.0120,proteasome
+LmxM.08_29.0140,RNA pol complexes
+LmxM.08_29.0170,chromatin associated complex
+LmxM.08_29.0360,mitochondrial ribosome
+LmxM.08_29.0390,Pre-mRNA Splicing Machinery
+LmxM.08_29.0400,RNA pol complexes
+LmxM.08_29.0430,mitochondrial ribosome
+LmxM.08_29.0760,chromatin associated complex
+LmxM.08_29.0865,Pre-mRNA Splicing Machinery
+LmxM.08_29.1070,ribosome
+LmxM.08_29.1070,ribosome
+LmxM.08_29.1090,ribosome
+LmxM.08_29.1090,ribosome
+LmxM.08_29.1110,chromatin associated complex
+LmxM.08_29.1110,chromatin associated complex
+LmxM.08_29.1240,chromatin associated complex
+LmxM.08_29.1270,chromatin associated complex
+LmxM.08_29.1430,editosome
+LmxM.08_29.1540,mitochondrial ribosome
+LmxM.08_29.1550,CRKT complex
+LmxM.08_29.1550,CRKT complex
+LmxM.08_29.2090,RNA pol complexes
+LmxM.08_29.2370,ribosome
+LmxM.08_29.2450,chromatin associated complex
+LmxM.08_29.2460,ribosome
+LmxM.08_29.2461,ribosome
+LmxM.08_29.2550,chromatin associated complex
+LmxM.08_29.2550,chromatin associated complex
+LmxM.08_29.2860,ribosome
+LmxM.09.0050,RNA pol complexes
+LmxM.09.0220,acidocalcisome
+LmxM.09.0230,proteasome
+LmxM.09.0230,proteasome
+LmxM.09.0270,acidocalcisome
+LmxM.09.0400,Kinetochore
+LmxM.09.0410,Kinetochore
+LmxM.09.0470,Kinetochore
+LmxM.09.0480,acidocalcisome
+LmxM.09.0670,chromatin associated complex
+LmxM.09.0720,CRKT complex
+LmxM.09.0891,ribosome
+LmxM.09.1060,RNA pol complexes
+LmxM.09.1260,CRKT complex
+LmxM.09.1340,RNA pol complexes
+LmxM.10.0070,ribosome
+LmxM.10.0160,RNA pol complexes
+LmxM.10.0300,Kinetochore
+LmxM.10.0870,RNA pol complexes
+LmxM.10.0970,RNA pol complexes
+LmxM.10.0990,RNA pol complexes
+LmxM.10.1120,mitochondrial ribosome
+LmxM.10.1227,Kinetochore
+LmxM.11.0210,acidocalcisome
+LmxM.11.0210,acidocalcisome
+LmxM.11.0240,proteasome
+LmxM.11.0240,proteasome
+LmxM.11.0240,proteasome
+LmxM.11.0520,acidocalcisome
+LmxM.11.0740,ribosome
+LmxM.11.1130,ribosome
+LmxM.11.1360,mitochondrial ribosome
+LmxM.12.0030,proteasome
+LmxM.12.0030,proteasome
+LmxM.12.0030,proteasome
+LmxM.12.0040,mitochondrial ribosome
+LmxM.12.0080,Kinetochore
+LmxM.12.0210,proteasome
+LmxM.12.0210,proteasome
+LmxM.12.0210,proteasome
+LmxM.12.0230,CRKT complex
+LmxM.12.1100,chromatin associated complex
+LmxM.12.1100,chromatin associated complex
+LmxM.13.0140,mitochondrial ribosome
+LmxM.13.0500,Pre-mRNA Splicing Machinery
+LmxM.13.0560,ribosome
+LmxM.13.0560,ribosome
+LmxM.13.0570,mitochondrial ribosome
+LmxM.13.1090,proteasome
+LmxM.13.1090,proteasome
+LmxM.13.1090,proteasome
+LmxM.13.1120,RNA pol complexes
+LmxM.13.1120,RNA pol complexes
+LmxM.13.1120,RNA pol complexes
+LmxM.13.1120,RNA pol complexes
+LmxM.13.1200,mitochondrial ribosome
+LmxM.13.1360,chromatin associated complex
+LmxM.13.1370,RNA pol complexes
+LmxM.13.1590,chromatin associated complex
+LmxM.13.1660,chromatin associated complex
+LmxM.13.1670,ribosome
+LmxM.14.0160,chromatin associated complex
+LmxM.14.0160,chromatin associated complex
+LmxM.14.0310,proteasome
+LmxM.14.0310,proteasome
+LmxM.14.0310,proteasome
+LmxM.14.0320,acidocalcisome
+LmxM.14.0780,mitochondrial ribosome
+LmxM.14.0890,CRKT complex
+LmxM.14.0890,chromatin associated complex
+LmxM.14.0890,chromatin associated complex
+LmxM.14.0950,mitochondrial ribosome
+LmxM.14.0980,acidocalcisome
+LmxM.14.1040,acidocalcisome
+LmxM.14.1040,acidocalcisome
+LmxM.14.1270,ribosome
+LmxM.14.1440,RNA pol complexes
+LmxM.15.0010,RNA pol complexes
+LmxM.15.0080,mitochondrial ribosome
+LmxM.15.0090,proteasome
+LmxM.15.0090,proteasome
+LmxM.15.0200,ribosome
+LmxM.15.0200,ribosome
+LmxM.15.0220,chromatin associated complex
+LmxM.15.0220,chromatin associated complex
+LmxM.15.0410,mitochondrial ribosome
+LmxM.15.0780,mitochondrial ribosome
+LmxM.15.0825,Kinetochore
+LmxM.15.1000,ribosome
+LmxM.15.1000,ribosome
+LmxM.15.1040,Pre-mRNA Splicing Machinery
+LmxM.15.1160,Pre-mRNA Splicing Machinery
+LmxM.15.1270,editosome
+LmxM.15.1400,mitochondrial ribosome
+LmxM.15.1470,Pre-mRNA Splicing Machinery
+LmxM.16.0010,mitochondrial ribosome
+LmxM.16.0160,mitochondrial ribosome
+LmxM.16.0280,acidocalcisome
+LmxM.16.0290,proteasome
+LmxM.16.0330,editosome
+LmxM.16.0460,ribosome
+LmxM.16.0570,RNA pol complexes
+LmxM.16.0575,RNA pol complexes
+LmxM.16.0600,RNA pol complexes
+LmxM.16.0610,RNA pol complexes
+LmxM.16.1170,ribosome
+LmxM.16.1180,Pre-mRNA Splicing Machinery
+LmxM.16.1230,mitochondrial ribosome
+LmxM.16.1250,Pre-mRNA Splicing Machinery
+LmxM.16.1590,Pre-mRNA Splicing Machinery
+LmxM.16.1630,Pre-mRNA Splicing Machinery
+LmxM.17.0010,RNA pol complexes
+LmxM.17.0010,RNA pol complexes
+LmxM.17.0080,Pre-mRNA Splicing Machinery
+LmxM.17.0081,Pre-mRNA Splicing Machinery
+LmxM.17.0082,Pre-mRNA Splicing Machinery
+LmxM.17.0083,Pre-mRNA Splicing Machinery
+LmxM.17.0084,Pre-mRNA Splicing Machinery
+LmxM.17.0085,Pre-mRNA Splicing Machinery
+LmxM.17.0086,Pre-mRNA Splicing Machinery
+LmxM.17.0300,Pre-mRNA Splicing Machinery
+LmxM.17.0430,Kinetochore
+LmxM.17.06.50,Kinetochore
+LmxM.17.0600,acidocalcisome
+LmxM.17.0710,Pre-mRNA Splicing Machinery
+LmxM.17.0760,mitochondrial ribosome
+LmxM.17.0920,Pre-mRNA Splicing Machinery
+LmxM.17.1220,RNA pol complexes
+LmxM.18.0260,mitochondrial ribosome
+LmxM.18.0310,mitochondrial ribosome
+LmxM.18.0320,mitochondrial ribosome
+LmxM.18.0620,ribosome
+LmxM.18.0620,ribosome
+LmxM.18.0780,RNA pol complexes
+LmxM.18.0780,RNA pol complexes
+LmxM.18.0780,RNA pol complexes
+LmxM.18.0780,RNA pol complexes
+LmxM.18.0780,RNA pol complexes
+LmxM.18.0790,RNA pol complexes
+LmxM.18.0790,RNA pol complexes
+LmxM.18.0790,RNA pol complexes
+LmxM.18.0790,RNA pol complexes
+LmxM.18.0800,mitochondrial ribosome
+LmxM.18.1370,chromatin associated complex
+LmxM.18.1400,ribosome
+LmxM.19.0030,RNA pol complexes
+LmxM.19.0050,RNA pol complexes
+LmxM.19.0420,RNA pol complexes
+LmxM.19.0660,RNA pol complexes
+LmxM.19.0660,RNA pol complexes
+LmxM.19.0660,RNA pol complexes
+LmxM.19.1120,proteasome
+LmxM.19.1120,proteasome
+LmxM.19.1120,proteasome
+LmxM.19.1230,mitochondrial ribosome
+LmxM.20.0010,RNA pol complexes
+LmxM.20.0010,RNA pol complexes
+LmxM.20.0490,RNA pol complexes
+LmxM.20.0490,RNA pol complexes
+LmxM.20.0490,RNA pol complexes
+LmxM.20.0510,mitochondrial ribosome
+LmxM.20.0530,mitochondrial ribosome
+LmxM.20.0900,editosome
+LmxM.20.1350,Pre-mRNA Splicing Machinery
+LmxM.20.1650,mitochondrial ribosome
+LmxM.20.1650,ribosome
+LmxM.20.1730,editosome
+LmxM.21.0015,RNA pol complexes
+LmxM.21.0100,mitochondrial ribosome
+LmxM.21.0200,vault
+LmxM.21.0320,Pre-mRNA Splicing Machinery
+LmxM.21.0490,chromatin associated complex
+LmxM.21.0540,Pre-mRNA Splicing Machinery
+LmxM.21.0730,ribosome
+LmxM.21.0760,proteasome
+LmxM.21.0760,proteasome
+LmxM.21.0760,proteasome
+LmxM.21.0827,mitochondrial ribosome
+LmxM.21.1050,ribosome
+LmxM.21.1050,ribosome
+LmxM.21.1060,ribosome
+LmxM.21.1070,ribosome
+LmxM.21.1090,chromatin associated complex
+LmxM.21.1120,Pre-mRNA Splicing Machinery
+LmxM.21.1500,mitochondrial ribosome
+LmxM.21.1550,mitochondrial ribosome
+LmxM.21.1550,ribosome
+LmxM.21.1620,mitochondrial ribosome
+LmxM.21.1700,proteasome
+LmxM.21.1700,proteasome
+LmxM.21.1700,proteasome
+LmxM.21.1720,ribosome
+LmxM.21.1820,ribosome
+LmxM.21.1830,proteasome
+LmxM.21.1830,proteasome
+LmxM.21.1830,proteasome
+LmxM.21.1830,proteasome
+LmxM.21.1830,proteasome
+LmxM.22.0030,ribosome
+LmxM.22.0030,ribosome
+LmxM.22.0080,chromatin associated complex
+LmxM.22.0120,Kinetochore
+LmxM.22.0420,ribosome
+LmxM.22.0460,ribosome
+LmxM.22.0570,proteasome
+LmxM.22.0620,proteasome
+LmxM.22.0620,proteasome
+LmxM.22.0670,chromatin associated complex
+LmxM.22.0710,mitochondrial ribosome
+LmxM.22.0870,mitochondrial ribosome
+LmxM.22.0880,CRKT complex
+LmxM.22.0990,mitochondrial ribosome
+LmxM.22.1060,Pre-mRNA Splicing Machinery
+LmxM.22.1220,mitochondrial ribosome
+LmxM.22.1450,mitochondrial ribosome
+LmxM.22.1460,chromatin associated complex
+LmxM.22.1470,mitochondrial ribosome
+LmxM.22.1520,ribosome
+LmxM.22.1560,ribosome
+LmxM.23.0040,Pre-mRNA Splicing Machinery
+LmxM.23.0125,Pre-mRNA Splicing Machinery
+LmxM.23.0340,acidocalcisome
+LmxM.23.0650,Pre-mRNA Splicing Machinery
+LmxM.23.1190,mitochondrial ribosome
+LmxM.23.1220,chromatin associated complex
+LmxM.23.1510,acidocalcisome
+LmxM.23.1530,Kinetochore
+LmxM.23.1550,Pre-mRNA Splicing Machinery
+LmxM.23.1610,Kinetochore
+LmxM.24.0040,ribosome
+LmxM.24.0530,CRKT complex
+LmxM.24.0830,mitochondrial ribosome
+LmxM.24.0860,mitochondrial ribosome
+LmxM.24.1100,Pre-mRNA Splicing Machinery
+LmxM.24.1400,Kinetochore
+LmxM.24.2050,ribosome
+LmxM.24.2210,ribosome
+LmxM.24.2210,ribosome
+LmxM.25.0080,Pre-mRNA Splicing Machinery
+LmxM.25.0140,RNA pol complexes
+LmxM.25.0140,RNA pol complexes
+LmxM.25.0140,RNA pol complexes
+LmxM.25.0140,RNA pol complexes
+LmxM.25.0170,CRKT complex
+LmxM.25.0530,acidocalcisome
+LmxM.25.0590,RNA pol complexes
+LmxM.25.0820,chromatin associated complex
+LmxM.25.0890,mitochondrial ribosome
+LmxM.25.1190,ribosome
+LmxM.25.1315,RNA pol complexes
+LmxM.25.1315,RNA pol complexes
+LmxM.25.1315,RNA pol complexes
+LmxM.25.1315,RNA pol complexes
+LmxM.25.1443,Pre-mRNA Splicing Machinery
+LmxM.25.1550,RNA pol complexes
+LmxM.25.1640,mitochondrial ribosome
+LmxM.25.1705,Pre-mRNA Splicing Machinery
+LmxM.25.1850,Pre-mRNA Splicing Machinery
+LmxM.25.2160,mitochondrial ribosome
+LmxM.25.2220,Kinetochore
+LmxM.25.2450,RNA pol complexes
+LmxM.26.0005,Pre-mRNA Splicing Machinery
+LmxM.26.0170,ribosome
+LmxM.26.0180,ribosome
+LmxM.26.0290,CRKT complex
+LmxM.26.0390,editosome
+LmxM.26.0850,mitochondrial ribosome
+LmxM.26.0860,editosome
+LmxM.26.1110,vault
+LmxM.26.1240,Pre-mRNA Splicing Machinery
+LmxM.26.1240,chromatin associated complex
+LmxM.26.1320,mitochondrial ribosome
+LmxM.26.1380,chromatin associated complex
+LmxM.26.1560,RNA pol complexes
+LmxM.26.1630,ribosome
+LmxM.26.1640,ribosome
+LmxM.26.2220,ribosome
+LmxM.26.2270,mitochondrial ribosome
+LmxM.26.2330,ribosome
+LmxM.26.2340,ribosome
+LmxM.26.2670,acidocalcisome
+LmxM.27.0180,mitochondrial ribosome
+LmxM.27.0190,proteasome
+LmxM.27.0190,proteasome
+LmxM.27.0190,proteasome
+LmxM.27.0210,acidocalcisome
+LmxM.27.0210,acidocalcisome
+LmxM.27.0230,mitochondrial ribosome
+LmxM.27.0340,editosome
+LmxM.27.0400,Kinetochore
+LmxM.27.0430,Kinetochore
+LmxM.27.0630,mitochondrial ribosome
+LmxM.27.0790,acidocalcisome
+LmxM.27.0840,RNA pol complexes
+LmxM.27.1030,mitochondrial ribosome
+LmxM.27.1260,chromatin associated complex
+LmxM.27.1460,proteasome
+LmxM.27.1460,proteasome
+LmxM.27.1460,proteasome
+LmxM.27.1550,RNA pol complexes
+LmxM.27.1895,mitochondrial ribosome
+LmxM.27.1970,Pre-mRNA Splicing Machinery
+LmxM.27.2100,Pre-mRNA Splicing Machinery
+LmxM.27.2220,mitochondrial ribosome
+LmxM.27.2400,chromatin associated complex
+LmxM.27.2480,Pre-mRNA Splicing Machinery
+LmxM.27.2600,RNA pol complexes
+LmxM.28.0110,proteasome
+LmxM.28.0110,proteasome
+LmxM.28.0110,proteasome
+LmxM.28.0210,RNA pol complexes
+LmxM.28.0540,ribosome
+LmxM.28.0730,mitochondrial ribosome
+LmxM.28.0810,RNA pol complexes
+LmxM.28.0810,RNA pol complexes
+LmxM.28.0810,RNA pol complexes
+LmxM.28.0810,RNA pol complexes
+LmxM.28.0810,RNA pol complexes
+LmxM.28.0920,mitochondrial ribosome
+LmxM.28.0960,ribosome
+LmxM.28.1010,ribosome
+LmxM.28.1011,ribosome
+LmxM.28.1030,ribosome
+LmxM.28.1200,Pre-mRNA Splicing Machinery
+LmxM.28.1200,chromatin associated complex
+LmxM.28.1670,chromatin associated complex
+LmxM.28.1730,proteasome
+LmxM.28.1730,proteasome
+LmxM.28.2060,RNA pol complexes
+LmxM.28.2060,RNA pol complexes
+LmxM.28.2060,RNA pol complexes
+LmxM.28.2180,mitochondrial ribosome
+LmxM.28.2205,ribosome
+LmxM.28.2270,CRKT complex
+LmxM.28.2360,mitochondrial ribosome
+LmxM.28.2430,acidocalcisome
+LmxM.28.2460,ribosome
+LmxM.28.2555,ribosome
+LmxM.28.2560,ribosome
+LmxM.28.2565,chromatin associated complex
+LmxM.28.2565,chromatin associated complex
+LmxM.28.2570,Pre-mRNA Splicing Machinery
+LmxM.28.2620,Pre-mRNA Splicing Machinery
+LmxM.28.2740,ribosome
+LmxM.28.2740a,ribosome
+LmxM.28.2750partial,ribosome
+LmxM.28.2770,Pre-mRNA Splicing Machinery
+LmxM.28.2770,chromatin associated complex
+LmxM.28.2780,chromatin associated complex
+LmxM.28.2780,Pre-mRNA Splicing Machinery
+LmxM.28.2820,Pre-mRNA Splicing Machinery
+LmxM.28.2820,chromatin associated complex
+LmxM.28.2930,acidocalcisome
+LmxM.28.2930,acidocalcisome
+LmxM.28.2960,Pre-mRNA Splicing Machinery
+LmxM.28.2980,mitochondrial ribosome
+LmxM.29.0060,mitochondrial ribosome
+LmxM.29.0280,mitochondrial ribosome
+LmxM.29.0570,Pre-mRNA Splicing Machinery
+LmxM.29.0580,mitochondrial ribosome
+LmxM.29.0650,mitochondrial ribosome
+LmxM.29.0670,ribosome
+LmxM.29.0690,ribosome
+LmxM.29.0740,mitochondrial ribosome
+LmxM.29.0830,chromatin associated complex
+LmxM.29.1030,mitochondrial ribosome
+LmxM.29.1120,Pre-mRNA Splicing Machinery
+LmxM.29.1205,Pre-mRNA Splicing Machinery
+LmxM.29.1830,Pre-mRNA Splicing Machinery
+LmxM.29.2460,chromatin associated complex
+LmxM.29.2470,chromatin associated complex
+LmxM.29.2490,chromatin associated complex
+LmxM.29.2520,Kinetochore
+LmxM.29.2550,chromatin associated complex
+LmxM.29.2620,RNA pol complexes
+LmxM.29.2660,mitochondrial ribosome
+LmxM.29.2750,mitochondrial ribosome
+LmxM.29.2770,mitochondrial ribosome
+LmxM.29.2810,mitochondrial ribosome
+LmxM.29.2890,mitochondrial ribosome
+LmxM.29.3015,Pre-mRNA Splicing Machinery
+LmxM.29.3200,ribosome
+LmxM.29.3220,mitochondrial ribosome
+LmxM.29.3235,mitochondrial ribosome
+LmxM.29.3340,ribosome
+LmxM.29.3340,ribosome
+LmxM.29.3530,mitochondrial ribosome
+LmxM.29.3590,ribosome
+LmxM.29.3650,ribosome
+LmxM.29.3650,ribosome
+LmxM.30.0160,RNA pol complexes
+LmxM.30.0160,RNA pol complexes
+LmxM.30.1220,acidocalcisome
+LmxM.30.1220,acidocalcisome
+LmxM.30.1550,mitochondrial ribosome
+LmxM.30.1590,mitochondrial ribosome
+LmxM.30.1900,ribosome
+LmxM.30.2030,ribosome
+LmxM.30.2390,acidocalcisome
+LmxM.30.2390,acidocalcisome
+LmxM.30.2610,RNA pol complexes
+LmxM.30.2610,RNA pol complexes
+LmxM.30.2750,Kinetochore
+LmxM.30.2850,mitochondrial ribosome
+LmxM.30.3180,RNA pol complexes
+LmxM.31.0150,RNA pol complexes
+LmxM.31.0390,proteasome
+LmxM.31.0390,proteasome
+LmxM.31.0390,proteasome
+LmxM.31.0400,RNA pol complexes
+LmxM.31.0430,ribosome
+LmxM.31.0650,mitochondrial ribosome
+LmxM.31.0715,Pre-mRNA Splicing Machinery
+LmxM.31.0750,RNA pol complexes
+LmxM.31.0750,RNA pol complexes
+LmxM.31.0850,Pre-mRNA Splicing Machinery
+LmxM.31.0880,ribosome
+LmxM.31.0920,acidocalcisome
+LmxM.31.1000,chromatin associated complex
+LmxM.31.1070,Pre-mRNA Splicing Machinery
+LmxM.31.1200,proteasome
+LmxM.31.1200,proteasome
+LmxM.31.1200,proteasome
+LmxM.31.1280,RNA pol complexes
+LmxM.31.1340,CRKT complex
+LmxM.31.1440,mitochondrial ribosome
+LmxM.31.1730,Pre-mRNA Splicing Machinery
+LmxM.31.1770,mitochondrial ribosome
+LmxM.31.1850,chromatin associated complex
+LmxM.31.1940,chromatin associated complex
+LmxM.31.2200,Pre-mRNA Splicing Machinery
+LmxM.31.2280,mitochondrial ribosome
+LmxM.31.2490,Pre-mRNA Splicing Machinery
+LmxM.31.2690,ribosome
+LmxM.31.2710,ribosome
+LmxM.31.2820,proteasome
+LmxM.31.2820,proteasome
+LmxM.31.2820,proteasome
+LmxM.31.3090,CRKT complex
+LmxM.31.3130,ribosome
+LmxM.31.3130,ribosome
+LmxM.31.3270,chromatin associated complex
+LmxM.31.3820,chromatin associated complex
+LmxM.31.3820,chromatin associated complex
+LmxM.31.3860,CRKT complex
+LmxM.31.3900,ribosome
+LmxM.31.3900,ribosome
+LmxM.32.0010,mitochondrial ribosome
+LmxM.32.0080,mitochondrial ribosome
+LmxM.32.0130,Pre-mRNA Splicing Machinery
+LmxM.32.0312,chromatin associated complex
+LmxM.32.0314,chromatin associated complex
+LmxM.32.0316,chromatin associated complex
+LmxM.32.0440,mitochondrial ribosome
+LmxM.32.0600,mitochondrial ribosome
+LmxM.32.0660,mitochondrial ribosome
+LmxM.32.0690,mitochondrial ribosome
+LmxM.32.0720,ribosome
+LmxM.32.0720,ribosome
+LmxM.32.1100,CRKT complex
+LmxM.32.1305,Pre-mRNA Splicing Machinery
+LmxM.32.1320,chromatin associated complex
+LmxM.32.1320,chromatin associated complex
+LmxM.32.1390,mitochondrial ribosome
+LmxM.32.1955,ribosome
+LmxM.32.1970,editosome
+LmxM.32.2170,chromatin associated complex
+LmxM.32.2510,mitochondrial ribosome
+LmxM.32.2810,chromatin associated complex
+LmxM.32.3190,Pre-mRNA Splicing Machinery
+LmxM.32.3210,Pre-mRNA Splicing Machinery
+LmxM.32.3230,ribosome
+LmxM.33.0360,RNA pol complexes
+LmxM.33.0360,RNA pol complexes
+LmxM.33.0400,mitochondrial ribosome
+LmxM.33.0440,ribosome
+LmxM.33.0650,proteasome
+LmxM.33.0650,proteasome
+LmxM.33.0650,proteasome
+LmxM.33.0720,mitochondrial ribosome
+LmxM.33.0860,ribosome
+LmxM.33.0860,ribosome
+LmxM.33.0890,RNA pol complexes
+LmxM.33.0890,RNA pol complexes
+LmxM.33.0890,RNA pol complexes
+LmxM.33.0890,RNA pol complexes
+LmxM.33.0890,RNA pol complexes
+LmxM.33.0930,RNA pol complexes
+LmxM.33.0930,RNA pol complexes
+LmxM.33.0990,acidocalcisome
+LmxM.33.2300,CRKT complex
+LmxM.33.2310,mitochondrial ribosome
+LmxM.33.2470,ribosome
+LmxM.33.2780,ribosome
+LmxM.33.2860,mitochondrial ribosome
+LmxM.33.2870,ribosome
+LmxM.33.2870,ribosome
+LmxM.33.2900,ribosome
+LmxM.33.2900,ribosome
+LmxM.33.3080,CRKT complex
+LmxM.33.3650,ribosome
+LmxM.33.3670,acidocalcisome
+LmxM.33.3680,mitochondrial ribosome
+LmxM.33.3860,Pre-mRNA Splicing Machinery
+LmxM.33.4100,RNA pol complexes
+LmxM.33.4310,Pre-mRNA Splicing Machinery
+LmxM.33.4340,proteasome
+LmxM.33.4340,proteasome
+LmxM.33.4340,proteasome
+LmxM.33.4340,proteasome
+LmxM.33.4340,proteasome
+LmxM.34.0110,Pre-mRNA Splicing Machinery
+LmxM.34.0180,Kinetochore
+LmxM.34.0240,ribosome
+LmxM.34.0370,RNA pol complexes
+LmxM.34.0400,ribosome
+LmxM.34.0400a,ribosome
+LmxM.34.0400b,ribosome
+LmxM.34.0600,ribosome
+LmxM.34.0750,proteasome
+LmxM.34.0750,proteasome
+LmxM.34.1200,Pre-mRNA Splicing Machinery
+LmxM.34.1310,RNA pol complexes
+LmxM.34.1430,ribosome
+LmxM.34.1430,ribosome
+LmxM.34.1440,ribosome
+LmxM.34.1440,ribosome
+LmxM.34.1670,ribosome
+LmxM.34.1880,ribosome
+LmxM.34.1890,ribosome
+LmxM.34.1900,ribosome
+LmxM.34.1910,ribosome
+LmxM.34.1910,ribosome
+LmxM.34.1920,ribosome
+LmxM.34.2050,ribosome
+LmxM.34.2190,ribosome
+LmxM.34.2190,ribosome
+LmxM.34.2230,mitochondrial ribosome
+LmxM.34.2370,chromatin associated complex
+LmxM.34.2370,chromatin associated complex
+LmxM.34.2850,CRKT complex
+LmxM.34.2850,chromatin associated complex
+LmxM.34.2850,chromatin associated complex
+LmxM.34.3280,ribosome
+LmxM.34.3290,ribosome
+LmxM.34.3490,mitochondrial ribosome
+LmxM.34.3760,ribosome
+LmxM.34.3780,ribosome
+LmxM.34.3790,ribosome
+LmxM.34.3790,ribosome
+LmxM.34.3800,ribosome
+LmxM.34.3800,ribosome
+LmxM.34.3840,proteasome
+LmxM.34.3840,proteasome
+LmxM.34.3840,proteasome
+LmxM.34.3850,mitochondrial ribosome
+LmxM.34.3850,ribosome
+LmxM.34.3860,chromatin associated complex
+LmxM.34.3940,mitochondrial ribosome
+LmxM.34.3950,Pre-mRNA Splicing Machinery
+LmxM.34.4050,Kinetochore
+LmxM.34.4090,Pre-mRNA Splicing Machinery
+LmxM.34.4410,acidocalcisome
+LmxM.34.4460,Pre-mRNA Splicing Machinery
+LmxM.34.4850,proteasome
+LmxM.34.4850,proteasome
+LmxM.34.4850,proteasome
+LmxM.34.5040,Pre-mRNA Splicing Machinery
+LmxM.34.5100,ribosome
+LmxM.35.2500,CRKT complex
+LmxM.36.0020,RNA pol complexes
+LmxM.36.0320,proteasome
+LmxM.36.0320,proteasome
+LmxM.36.0320,proteasome
+LmxM.36.0390,chromatin associated complex
+LmxM.36.0390,chromatin associated complex
+LmxM.36.0535,Pre-mRNA Splicing Machinery
+LmxM.36.0600,ribosome
+LmxM.36.0700,editosome
+LmxM.36.0920,editosome
+LmxM.36.1050,editosome
+LmxM.36.1070,ribosome
+LmxM.36.1100,ribosome
+LmxM.36.1300,Pre-mRNA Splicing Machinery
+LmxM.36.1600,proteasome
+LmxM.36.1600,proteasome
+LmxM.36.1600,proteasome
+LmxM.36.1650,proteasome
+LmxM.36.1650,proteasome
+LmxM.36.1650,proteasome
+LmxM.36.1750,acidocalcisome
+LmxM.36.1860,mitochondrial ribosome
+LmxM.36.1870,vault
+LmxM.36.1900,Kinetochore
+LmxM.36.1925,ribosome
+LmxM.36.2020,chromatin associated complex
+LmxM.36.2030,chromatin associated complex
+LmxM.36.2100,Kinetochore
+LmxM.36.2310,mitochondrial ribosome
+LmxM.36.2370,chromatin associated complex
+LmxM.36.2370,chromatin associated complex
+LmxM.36.2470,acidocalcisome
+LmxM.36.2470,acidocalcisome
+LmxM.36.2800,Kinetochore
+LmxM.36.2830,Pre-mRNA Splicing Machinery
+LmxM.36.2860,ribosome
+LmxM.36.2870,ribosome
+LmxM.36.2920,Pre-mRNA Splicing Machinery
+LmxM.36.3040,Pre-mRNA Splicing Machinery
+LmxM.36.3050,RNA pol complexes
+LmxM.36.3130,mitochondrial ribosome
+LmxM.36.3260,mitochondrial ribosome
+LmxM.36.3270,ribosome
+LmxM.36.3280,mitochondrial ribosome
+LmxM.36.3350,mitochondrial ribosome
+LmxM.36.3360,CRKT complex
+LmxM.36.3390,ribosome
+LmxM.36.3400,ribosome
+LmxM.36.3653,mitochondrial ribosome
+LmxM.36.3740,ribosome
+LmxM.36.3750,ribosome
+LmxM.36.3760,ribosome
+LmxM.36.3760,ribosome
+LmxM.36.3980,chromatin associated complex
+LmxM.36.3980,chromatin associated complex
+LmxM.36.3990,proteasome
+LmxM.36.3990,proteasome
+LmxM.36.3990,proteasome
+LmxM.36.4120,mitochondrial ribosome
+LmxM.36.4280,Pre-mRNA Splicing Machinery
+LmxM.36.4360,proteasome
+LmxM.36.4360,proteasome
+LmxM.36.4360,proteasome
+LmxM.36.4420,ribosome
+LmxM.36.4510,ribosome
+LmxM.36.4510,ribosome
+LmxM.36.5010,ribosome
+LmxM.36.5120,ribosome
+LmxM.36.5160,Pre-mRNA Splicing Machinery
+LmxM.36.5260,acidocalcisome
+LmxM.36.5350,Kinetochore
+LmxM.36.5420,Pre-mRNA Splicing Machinery
+LmxM.36.5750,mitochondrial ribosome
+LmxM.36.6050,mitochondrial ribosome
+LmxM.36.6190,mitochondrial ribosome
+LmxM.36.6270,chromatin associated complex
+LmxM.36.6910,chromatin associated complex
+LmxM.36.6910,chromatin associated complex
+LmxM.36.6930,editosome
+LmxM.36.6985,Pre-mRNA Splicing Machinery

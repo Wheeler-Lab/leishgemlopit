@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leishgemlopit"
+version = "0.0.1"
+authors = [
+	{ name = "Ulrich Dobramysl", email="ulrich.dobramysl@gmail.com" },
+]
+description = "Analyse LOPIT data within the LeishGEM project."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+	"numpy",
+	"tqdm",
+	"types-tqdm",
+	"backports.strenum ; python_version < '3.11'",
+	"tryptag @ git+https://github.com/zephyris/TrypTag.git",
+    "annotations @ git+https://github.com/ulido/annotations",
+    "tagm @ git+https://github.com/ulido/TAGM.git",
+	"orthomcl @ git+https://github.com/ulido/orthomcl.git",
+	"pandas",
+	"openpyxl",
+	"tabulate",
+	"hdbscan",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Wheeler-Lab/LeishGEMLOPIT"
+
+[tool.tox]
+requires = ["tox>4.19"]
+env_list = ["3.9", "3.10", "3.11", "3.12", "3.13", "type"]
+
+[tool.tox.env_run_base]
+description = "Run unit tests under {base_python}"
+deps = [
+	"pytest>=8",
+	"pytest-sugar",
+]
+commands = [[ "pytest", "tests", { replace = "posargs", extend = true} ]]
+
+[tool.tox.env.type]
+description = "Run type check on code base"
+deps = ["mypy>=1.11.2"]
+commands = [["mypy", { replace = "posargs", default = ["src", "tests"], extend = true} ]]
