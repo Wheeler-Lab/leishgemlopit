@@ -21,7 +21,8 @@ def most_common_marker(g: pd.Series):
     c = Counter[str](g)
 
     markers = {
-        m for m in c if c[m] > 1
+        m for m in c
+        if c[m] > 1 and m != "unknown"
     }
     markers_no_bg = markers - ANNOTATIONS_BACKGROUND_LIKE
     if markers_no_bg:
@@ -87,7 +88,7 @@ class UnsupervisedHDBSCAN(Mapping[str, str]):
 
             markers = markers.join(
                 clusters[clusters >= 0],
-                how="inner").fillna("unknown")
+                how="right").fillna("unknown")
             markers = (
                 markers.groupby("cluster").marker.apply(most_common_marker)
             )
