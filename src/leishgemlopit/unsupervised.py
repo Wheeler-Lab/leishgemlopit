@@ -2,6 +2,7 @@ from collections import Counter
 import io
 import pathlib
 from typing import Mapping
+import warnings
 
 from cycler import cycler
 from matplotlib import pyplot as plt
@@ -59,16 +60,19 @@ class UnsupervisedHDBSCAN(Mapping[str, str]):
             index=df.index,
         )
 
-        hdbscan = HDBSCAN(
-            min_samples=self.min_samples,
-            min_cluster_size=self.min_cluster_size,
-            cluster_selection_method='leaf'
-        )
-        clusters = pd.Series(
-            hdbscan.fit_predict(df),
-            index=df.index,
-            name="cluster",
-        )
+        with warnings.catch_warnings():
+            # Ignore HDBSCAN triggering sklearn option rename warning.
+            warnings.simplefilter("ignore", FutureWarning)
+            hdbscan = HDBSCAN(
+                min_samples=self.min_samples,
+                min_cluster_size=self.min_cluster_size,
+                cluster_selection_method='leaf'
+            )
+            clusters = pd.Series(
+                hdbscan.fit_predict(df),
+                index=df.index,
+                name="cluster",
+            )
 
         self._data: dict[str, int] = {
             geneid: cluster for geneid, cluster in clusters.items()
