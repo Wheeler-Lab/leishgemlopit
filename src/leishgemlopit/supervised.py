@@ -1,6 +1,5 @@
 from collections import defaultdict
 import io
-import pathlib
 from typing import Mapping, NamedTuple
 
 from cycler import cycler
@@ -15,13 +14,15 @@ from leishgemlopit.tsne import TSNEAnalysis
 
 from tagm import TAGMMAP
 
+from leishgemlopit.utils import PNGMixin
+
 
 class TAGMResult(NamedTuple):
     label: str
     probability: float
 
 
-class SupervisedTAGM(Mapping[str, TAGMResult]):
+class SupervisedTAGM(Mapping[str, TAGMResult], PNGMixin):
     def __init__(
         self,
         lopit_experiment: LOPITExperiment,
@@ -158,11 +159,6 @@ class SupervisedTAGM(Mapping[str, TAGMResult]):
         plt.close(figure)
         return ret_value
 
-    def to_png(self, output_file: pathlib.Path):
-        output_file = pathlib.Path(output_file)
-        with output_file.open("wb") as f:
-            f.write(self._repr_png_())
-
 
 class TAGMResultCollection(Mapping[str, TAGMResult]):
     def __init__(self, results: dict[LOPITExperiment, TAGMResult]):
@@ -198,7 +194,7 @@ class TAGMResultCollection(Mapping[str, TAGMResult]):
         return term
 
 
-class SupervisedTAGMCollection(Mapping[str, TAGMResultCollection]):
+class SupervisedTAGMCollection(Mapping[str, TAGMResultCollection], PNGMixin):
     def __init__(
         self,
         lopit_experiments: LOPITExperimentCollection,
@@ -304,8 +300,3 @@ class SupervisedTAGMCollection(Mapping[str, TAGMResultCollection]):
             ret_value = png_bytes.getvalue()
         plt.close(figure)
         return ret_value
-
-    def to_png(self, output_file: pathlib.Path):
-        output_file = pathlib.Path(output_file)
-        with output_file.open("wb") as f:
-            f.write(self._repr_png_())

@@ -1,5 +1,4 @@
 import io
-import pathlib
 from typing import Mapping, NamedTuple
 
 from leishgemlopit.lopit import LOPITExperimentCollection
@@ -9,13 +8,15 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
 
+from leishgemlopit.utils import PNGMixin
+
 
 class TSNEPoint(NamedTuple):
     x: float
     y: float
 
 
-class TSNEAnalysis(Mapping[str, TSNEPoint]):
+class TSNEAnalysis(Mapping[str, TSNEPoint], PNGMixin):
     def __init__(self, lopit_experiments: LOPITExperimentCollection):
         data = lopit_experiments.to_dataframe()
         self._do_tsne(data)
@@ -76,8 +77,3 @@ class TSNEAnalysis(Mapping[str, TSNEPoint]):
             ret_value = png_bytes.getvalue()
         plt.close(figure)
         return ret_value
-
-    def to_png(self, output_file: pathlib.Path):
-        output_file = pathlib.Path(output_file)
-        with output_file.open("wb") as f:
-            f.write(self._repr_png_())

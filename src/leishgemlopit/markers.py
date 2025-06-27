@@ -1,5 +1,4 @@
 import io
-import pathlib
 from typing import Mapping
 
 from cycler import cycler
@@ -9,6 +8,7 @@ import pandas as pd
 
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
+from leishgemlopit.utils import PNGMixin
 
 
 class MarkerGenerator:
@@ -39,7 +39,7 @@ class MarkerFactory:
         return terms
 
 
-class Markers(Mapping[str, set[str]]):
+class Markers(Mapping[str, set[str]], PNGMixin):
     def __init__(
         self,
         marker_factory: MarkerFactory,
@@ -127,11 +127,6 @@ class Markers(Mapping[str, set[str]]):
             ret_value = png_bytes.getvalue()
         plt.close(figure)
         return ret_value
-
-    def to_png(self, output_file: pathlib.Path):
-        output_file = pathlib.Path(output_file)
-        with output_file.open("wb") as f:
-            f.write(self._repr_png_())
 
     def summary(self):
         return MarkerSummary(self)

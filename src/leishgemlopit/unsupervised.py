@@ -1,6 +1,5 @@
 from collections import Counter
 import io
-import pathlib
 from typing import Mapping
 import warnings
 
@@ -15,6 +14,7 @@ from leishgemlopit.lopit import LOPITExperimentCollection
 from leishgemlopit.markers import Markers
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
+from leishgemlopit.utils import PNGMixin
 
 
 def most_common_marker(g: pd.Series):
@@ -34,7 +34,7 @@ def most_common_marker(g: pd.Series):
     return "unknown"
 
 
-class UnsupervisedHDBSCAN(Mapping[str, str]):
+class UnsupervisedHDBSCAN(Mapping[str, str], PNGMixin):
     def __init__(
         self,
         lopit_experiments: LOPITExperimentCollection,
@@ -178,11 +178,6 @@ class UnsupervisedHDBSCAN(Mapping[str, str]):
             ret_value = png_bytes.getvalue()
         plt.close(figure)
         return ret_value
-
-    def to_png(self, output_file: pathlib.Path):
-        output_file = pathlib.Path(output_file)
-        with output_file.open("wb") as f:
-            f.write(self._repr_png_())
 
     def summary(self):
         genes_assigned = [g for g, c in self.items() if c >= 0]
