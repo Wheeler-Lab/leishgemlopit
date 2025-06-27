@@ -29,6 +29,9 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/Wheeler-Lab/LeishGEMLOPIT"
 
+[project.scripts]
+leishgemlopit = "leishgemlopit.analysis:cli"
+
 [tool.tox]
 requires = ["tox>4.19"]
 env_list = ["3.9", "3.10", "3.11", "3.12", "3.13", "type"]

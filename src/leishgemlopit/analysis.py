@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict
+import argparse
 import pathlib
 
 from .supervised import SupervisedTAGMCollection
@@ -88,10 +89,7 @@ def analysis(run_name: str, lopit_data: pd.DataFrame):
     assigned.to_png(f"{run.name}_supervised_clusters.png")
 
 
-if __name__ == '__main__':
-    import argparse
-    import pathlib
-
+def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("name", type=str)
     parser.add_argument("lopit_data", type=pathlib.Path)
