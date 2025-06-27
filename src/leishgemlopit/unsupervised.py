@@ -12,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 
 from leishgemlopit.lopit import LOPITExperimentCollection
 from leishgemlopit.markers import Markers
-from leishgemlopit.tryptag import BACKGROUND_LIKE
+from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
 
 
@@ -22,7 +22,7 @@ def most_common_marker(g: pd.Series):
     markers = {
         m for m in c if c[m] > 1
     }
-    markers_no_bg = markers - BACKGROUND_LIKE
+    markers_no_bg = markers - ANNOTATIONS_BACKGROUND_LIKE
     if markers_no_bg:
         markers = markers_no_bg
 

@@ -7,12 +7,12 @@ import numpy as np
 from tryptag import CellLine, GeneNotFoundError, TrypTag
 from tryptag.datasource import CellLineStatus
 
+from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.markers import MarkerGenerator
 
 from orthomcl import OrthoMCL
 
 FIXTURE_PATH = pathlib.Path(__file__).parent / "__assets__"
-
 
 SIGNAL_THRESHOLD_QUANTILE = 0.25
 
@@ -52,14 +52,6 @@ _ANNOTATION_REMAPPING = {
 ANNOTATION_REMAPPING = {
     frozenset(k): v for k, v in _ANNOTATION_REMAPPING.items()}
 
-BACKGROUND_LIKE = {
-    'cytoplasm',
-    'endocytic',
-    'mitochondrion',
-    'endoplasmic reticulum',
-    'nuclear lumen',
-    'flagellar cytoplasm',
-}
 
 IGNORE_PER_TERMINUS = {
     "N": {
@@ -155,7 +147,7 @@ class TrypTagMarkerFactory(MarkerGenerator):
         return new_terms
 
     def remove_background_like(self, localisations: set[str]):
-        if bg_removed := localisations.difference(BACKGROUND_LIKE):
+        if bg_removed := localisations.difference(ANNOTATIONS_BACKGROUND_LIKE):
             return bg_removed
         return localisations
 

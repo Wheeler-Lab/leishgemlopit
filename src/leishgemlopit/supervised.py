@@ -1,4 +1,4 @@
-from collections import Counter, defaultdict
+from collections import defaultdict
 import io
 import pathlib
 from typing import Mapping, NamedTuple
@@ -11,26 +11,9 @@ from sklearn.preprocessing import QuantileTransformer
 
 from leishgemlopit.lopit import LOPITExperiment, LOPITExperimentCollection
 from leishgemlopit.markers import Markers
-from leishgemlopit.tryptag import BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
 
 from tagm import TAGMMAP
-
-
-def most_common_marker(g: pd.Series):
-    c = Counter[str](g)
-
-    markers = {
-        m for m in c if c[m] > 1
-    }
-    markers_no_bg = markers - BACKGROUND_LIKE
-    if markers_no_bg:
-        markers = markers_no_bg
-
-    for marker, _ in c.most_common():
-        if marker in markers:
-            return marker
-    return "unknown"
 
 
 class TAGMResult(NamedTuple):

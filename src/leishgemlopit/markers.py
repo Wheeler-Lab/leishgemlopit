@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from matplotlib.markers import MarkerStyle
 import pandas as pd
 
-from leishgemlopit.tryptag import BACKGROUND_LIKE
+from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
 
 
@@ -29,10 +29,10 @@ class MarkerFactory:
 
     @staticmethod
     def _filter_background_like(terms: set[str]):
-        if BACKGROUND_LIKE.issuperset(terms):
+        if ANNOTATIONS_BACKGROUND_LIKE.issuperset(terms):
             return terms
-        return terms.difference(BACKGROUND_LIKE)
-    
+        return terms.difference(ANNOTATIONS_BACKGROUND_LIKE)
+
     def _filter_multiple(self, terms: set[str]):
         if len(terms) > 1:
             return set()
