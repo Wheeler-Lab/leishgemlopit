@@ -182,3 +182,12 @@ class UnsupervisedHDBSCAN(Mapping[str, str]):
         output_file = pathlib.Path(output_file)
         with output_file.open("wb") as f:
             f.write(self._repr_png_())
+
+    def summary(self):
+        genes_assigned = [g for g, c in self.items() if c >= 0]
+        genes_not_assigned = [g for g, c in self.items() if c < 0]
+        return {
+            "nr_clusters": len(set(c for c in self.values() if c >= 0)),
+            "nr_genes_assigned_cluster": len(genes_assigned),
+            "nr_genes_not_assigned": len(genes_not_assigned),
+        }
