@@ -1,6 +1,8 @@
 from __future__ import annotations
 from collections import Counter
 from collections.abc import Mapping
+import pathlib
+import re
 from weakref import WeakValueDictionary
 
 import numpy as np
@@ -193,6 +195,33 @@ class LOPITRun(LOPITExperimentCollection):
         if fraction < 0.75:
             return None
         return OrthoMCL.get_organism_info(most_common)
+
+    @staticmethod
+    def from_csv(
+        file: pathlib.Path,
+    ):
+        file = pathlib.Path(file)
+
+        df = pd.read_csv(file)
+        tmt_re = "|".join(DEFAULT_TMT_LABELS)
+        columns_re = re.compile(
+            rf"Abundances \(Grouped\): (?P<experiment>[A-Z]), (?P<tmt>{tmt_re})$")  # noqa: E501
+        relevant_columns = {"UniProt Entry Name": "geneid"}
+        for column in df.columns:
+            if m := columns_re.match(column):
+                relevant_columns[column] = (m["experiment"], m["tmt"])
+        df = df.loc[:, list(relevant_columns)]
+        df.columns = list(relevant_columns.values())
+        df.loc[:, "geneid"] = df.geneid.str.replace("-t42_1-p1", "")
+        df = df.set_index("geneid").fillna(0.0)
+        df.columns = pd.MultiIndex.from_tuples(
+            df.columns.tolist(), names=("experiment", "tmt_label"))
+        df = df.stack("experiment", future_stack=True)
+        df: pd.DataFrame = (df.T / df.sum(axis=1)).T
+        df = df.unstack("experiment")
+        df = df[df.notna().all(axis=1)].stack("experiment", future_stack=True)
+
+        return LOPITRun.from_dataframe(file.stem, df)
 
     @staticmethod
     def from_dataframe(name: str, dataframe: pd.DataFrame):

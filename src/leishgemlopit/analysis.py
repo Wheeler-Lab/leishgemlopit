@@ -2,7 +2,6 @@ from collections import defaultdict
 from collections.abc import Mapping
 import argparse
 import pathlib
-import re
 from typing import NamedTuple
 from zipfile import ZipFile
 
@@ -10,7 +9,7 @@ from .constants import FIXTURE_PATH
 from .supervised import SupervisedTAGMCollection
 from .tsne import TSNEAnalysis, TSNEPoint
 from .unsupervised import UnsupervisedHDBSCAN
-from .lopit import DEFAULT_TMT_LABELS, Gene, LOPITRun
+from .lopit import Gene, LOPITRun
 from .tryptag import TrypTagMarkerFactory
 from .markers import MarkerGenerator, MarkerFactory, Markers
 from orthomcl import OrthoMCL
@@ -108,35 +107,6 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
         )
         self.analyses.append(self.assigned)
 
-    @staticmethod
-    def from_csv(
-        file: pathlib.Path,
-        marker_factory=DEFAULT_MARKER_FACTORY,
-    ):
-        file = pathlib.Path(file)
-
-        df = pd.read_csv(file)
-        tmt_re = "|".join(DEFAULT_TMT_LABELS)
-        columns_re = re.compile(
-            rf"Abundances \(Grouped\): (?P<experiment>[A-Z]), (?P<tmt>{tmt_re})$")  # noqa: E501
-        relevant_columns = {"UniProt Entry Name": "geneid"}
-        for column in df.columns:
-            if m := columns_re.match(column):
-                relevant_columns[column] = (m["experiment"], m["tmt"])
-        df = df.loc[:, list(relevant_columns)]
-        df.columns = list(relevant_columns.values())
-        df.loc[:, "geneid"] = df.geneid.str.replace("-t42_1-p1", "")
-        df = df.set_index("geneid").fillna(0.0)
-        df.columns = pd.MultiIndex.from_tuples(
-            df.columns.tolist(), names=("experiment", "tmt_label"))
-        df = df.stack("experiment", future_stack=True)
-        df: pd.DataFrame = (df.T / df.sum(axis=1)).T
-        df = df.unstack("experiment")
-        df = df[df.notna().all(axis=1)].stack("experiment", future_stack=True)
-
-        run = LOPITRun.from_dataframe(file.stem, df)
-        return Analysis(run, marker_factory)
-
     def __getitem__(self, geneid: str):
         try:
             gene = self.run.genes[geneid]
@@ -198,5 +168,6 @@ def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("lopit_data", type=pathlib.Path)
     args = parser.parse_args()
-    analysis = Analysis.from_csv(args.lopit_data)
+    run = LOPITRun.from_csv(args.lopit_data)
+    analysis = Analysis(run)
     analysis.save()
