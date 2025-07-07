@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections import Counter
 from collections.abc import Mapping
 from weakref import WeakValueDictionary
 
@@ -26,6 +27,7 @@ class Gene:
     gene_id: str
     data_entries: dict[LOPITExperiment, LOPITDataEntry]
     description: str | None
+    organism: str | None
 
     _CACHE: dict[str, Gene] = WeakValueDictionary()
 
@@ -33,7 +35,10 @@ class Gene:
         self.gene_id = gene_id
         self.data_entries = {}
         try:
-            self.description = OrthoMCL.get_entry(gene_id).description
+            orthomcl_entry = OrthoMCL.get_entry(gene_id)
+            self.description = orthomcl_entry.description
+            self.organism = orthomcl_entry.organism
+
         except KeyError:
             self.description = None
 
@@ -133,7 +138,11 @@ class LOPITExperimentCollection(Mapping[str, LOPITExperiment]):
         self._experiments = {
             experiment.name: experiment for experiment in experiments
         }
-        self.genes: dict[str, Gene] = {}
+        self.genes: dict[str, Gene] = {
+            gene.gene_id: gene
+            for experiment in self._experiments.values()
+            for gene in experiment
+        }
 
     def __getitem__(self, name: str):
         return self._experiments[name]
@@ -172,6 +181,18 @@ class LOPITRun(LOPITExperimentCollection):
             raise ValueError("Experiment is already in run!")
 
         self._experiments[experiment.name] = experiment
+
+    def get_prevailing_organism(self):
+        organisms = Counter[str]()
+        for gene in self.genes.values():
+            organisms[gene.organism] += 1
+
+        total = organisms.total()
+        most_common, count = organisms.most_common(1)[0]
+        fraction = count / total
+        if fraction < 0.75:
+            return None
+        return OrthoMCL.get_organism_info(most_common)
 
     @staticmethod
     def from_dataframe(name: str, dataframe: pd.DataFrame):

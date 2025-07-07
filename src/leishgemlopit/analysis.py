@@ -88,6 +88,7 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
         marker_factory=DEFAULT_MARKER_FACTORY
     ):
         self.run = run
+        self.prevailing_organism = self.run.get_prevailing_organism()
         self.tsne = TSNEAnalysis(run)
         self.markers = Markers(marker_factory(), list(run.genes), self.tsne)
         self.analyses = [self.tsne, self.markers]
