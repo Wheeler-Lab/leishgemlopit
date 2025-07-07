@@ -2,6 +2,7 @@ from collections import Counter, defaultdict
 import argparse
 import pathlib
 
+from .constants import FIXTURE_PATH
 from .supervised import SupervisedTAGMCollection
 from .tsne import TSNEAnalysis
 from .unsupervised import UnsupervisedHDBSCAN
@@ -11,8 +12,6 @@ from .markers import MarkerGenerator, MarkerFactory, Markers
 from orthomcl import OrthoMCL
 
 import pandas as pd
-
-FIXTURE_PATH = pathlib.Path(__file__).parent / "__assets__"
 
 
 class TBruceiMarkerTermFile(MarkerGenerator):
