@@ -180,7 +180,7 @@ class SupervisedTAGMCollection(TSNEPlotMixin):
         }
 
         labels = {
-            geneid: result.assign()[0]
+            geneid: result.assign()
             for geneid, result in self._results.items()
         }
         self._labels = {
@@ -188,7 +188,12 @@ class SupervisedTAGMCollection(TSNEPlotMixin):
         }
 
     def __getitem__(self, gene_id: str):
-        return self._labels[gene_id]
+        return self._labels[gene_id][0]
+
+    def get_confidence(self, gene_id: str):
+        if self.was_assigned(gene_id):
+            return self._labels[gene_id][1]
+        return float("NaN")
 
     def was_assigned(self, gene_id: str):
         return self._labels[gene_id] != "unknown"

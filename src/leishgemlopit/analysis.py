@@ -1,14 +1,16 @@
-from collections import Counter, defaultdict
+from collections import defaultdict
+from collections.abc import Mapping
 import argparse
 import pathlib
 import re
+from typing import NamedTuple
 from zipfile import ZipFile
 
 from .constants import FIXTURE_PATH
 from .supervised import SupervisedTAGMCollection
-from .tsne import TSNEAnalysis
+from .tsne import TSNEAnalysis, TSNEPoint
 from .unsupervised import UnsupervisedHDBSCAN
-from .lopit import DEFAULT_TMT_LABELS, LOPITRun
+from .lopit import DEFAULT_TMT_LABELS, Gene, LOPITRun
 from .tryptag import TrypTagMarkerFactory
 from .markers import MarkerGenerator, MarkerFactory, Markers
 from orthomcl import OrthoMCL
@@ -55,10 +57,8 @@ class LmexMultiSheetExcelMarkerTermFile(MarkerGenerator):
         return terms
 
 
-def analysis(run_name: str, lopit_data: pd.DataFrame):
-    run = LOPITRun.from_dataframe(run_name, lopit_data)
-
-    markerfactory = MarkerFactory([
+def DEFAULT_MARKER_FACTORY():
+    return MarkerFactory([
         TrypTagMarkerFactory(),
         TBruceiMarkerTermFile(
             "ribosome", FIXTURE_PATH / "brucei.ribo.txt"),
@@ -69,123 +69,133 @@ def analysis(run_name: str, lopit_data: pd.DataFrame):
         )
     ])
 
-    descriptions = pd.Series(
-        {
-            gene.gene_id: gene.description if gene.description != "unknown" else ""
-            for gene in {
-                gene for experiment in run.values()
-                for gene in experiment
-            }
-        },
-        name="description",
-    )
 
-    with ZipFile(run_name + ".zip", "w") as zip:
-        tsne = TSNEAnalysis(run)
-        tsne.to_png(zip.open(f"{run.name}_tsne.png", "w"))
+class LOPITAnalysisResult(NamedTuple):
+    gene_id: Gene
+    gene_description: str | None
+    tsne_xy: TSNEPoint
+    marker: str | None
+    unsupervised_cluster: int
+    unsupervised_label: str | None
+    tagm_label: str
+    tagm_confidence: float
 
-        markers = Markers(markerfactory, list(run.genes), tsne)
-        markers.to_png(zip.open(f"{run.name}_markers.png", "w"))
 
-        clusters = UnsupervisedHDBSCAN(run, markers, tsne, min_samples=3)
-        clusters.to_png(zip.open(f"{run.name}_unsupervised_clusters.png", "w"))
+class Analysis(Mapping[str, LOPITAnalysisResult]):
+    def __init__(
+        self,
+        run: LOPITRun,
+        marker_factory=DEFAULT_MARKER_FACTORY
+    ):
+        self.run = run
+        self.tsne = TSNEAnalysis(run)
+        self.markers = Markers(marker_factory(), list(run.genes), self.tsne)
+        self.analyses = [self.tsne, self.markers]
 
-        assigned = SupervisedTAGMCollection(
+        self.clusters = UnsupervisedHDBSCAN(
             run,
-            markers,
-            tsne_analysis=tsne,
+            self.markers,
+            tsne_analysis=self.tsne,
+            min_samples=3,
         )
-        assigned.to_png(zip.open(f"{run.name}_supervised_clusters.png", "w"))
+        self.analyses.append(self.clusters)
 
-        tables = {
-            "Gene": descriptions,
-        }
-        tables.update(
-            {
-                key: component.to_dataframe(include_tsne=False)
-                for key, component in [
-                    ("t-SNE", tsne),
-                    ("Markers", markers),
-                    ("Unsupervised clustering", clusters),
-                    ("TAGM-MAP", assigned),
-                ]
-            }
+        self.assigned = SupervisedTAGMCollection(
+            run,
+            self.markers,
+            tsne_analysis=self.tsne,
         )
-        table = pd.concat(
-            tables,
-            axis=1,
-        )
-        table = table.sort_index().fillna("")
-        print(table.loc[:, ("Unsupervised clustering", "cluster")])
-        print(table.loc[:, ("Gene", "description")])
-        print(table.loc[:, ("Markers", "marker")])
+        self.analyses.append(self.assigned)
 
-        nr_of_unknown_unsupervised = (
-            (
-                (table.loc[:, ("Unsupervised clustering", "cluster")] >= 0) &
-                (table.loc[:, ("Gene", "description")] == "") &
-                (table.loc[:, ("Markers", "marker")] == "")
-            ).sum()
-        )
-        nr_of_unknown_tagm = (
-            (
-                (table.loc[:, ("TAGM-MAP", "label")] != "") &
-                (table.loc[:, ("Gene", "description")] == "") &
-                (table.loc[:, ("Markers", "marker")] == "")
-            ).sum()
-        )
-        summary = pd.DataFrame(
-            [
-                {
-                    "Analysis": "Unsupervised clustering",
-                    "Number of unknown genes assigned": nr_of_unknown_unsupervised,
-                },
-                {
-                    "Analysis": "TAGM-MAP",
-                    "Number of unknown genes assigned": nr_of_unknown_tagm,
-                },
-            ]
-        ).set_index("Analysis")
+    @staticmethod
+    def from_csv(
+        file: pathlib.Path,
+        marker_factory=DEFAULT_MARKER_FACTORY,
+    ):
+        file = pathlib.Path(file)
 
-        markercounter = Counter[str](
-            [m for mset in markers.values() for m in mset])
-        markersummary = pd.Series(
-            {
-                marker: count
-                for marker, count in markercounter.most_common()
-            },
-            name="Count",
-        ).to_frame()
+        df = pd.read_csv(file)
+        tmt_re = "|".join(DEFAULT_TMT_LABELS)
+        columns_re = re.compile(
+            rf"Abundances \(Grouped\): (?P<experiment>[A-Z]), (?P<tmt>{tmt_re})$")  # noqa: E501
+        relevant_columns = {"UniProt Entry Name": "geneid"}
+        for column in df.columns:
+            if m := columns_re.match(column):
+                relevant_columns[column] = (m["experiment"], m["tmt"])
+        df = df.loc[:, list(relevant_columns)]
+        df.columns = list(relevant_columns.values())
+        df.loc[:, "geneid"] = df.geneid.str.replace("-t42_1-p1", "")
+        df = df.set_index("geneid").fillna(0.0)
+        df.columns = pd.MultiIndex.from_tuples(
+            df.columns.tolist(), names=("experiment", "tmt_label"))
+        df = df.stack("experiment", future_stack=True)
+        df: pd.DataFrame = (df.T / df.sum(axis=1)).T
+        df = df.unstack("experiment")
+        df = df[df.notna().all(axis=1)].stack("experiment", future_stack=True)
 
-        with zip.open(f"{run.name}_results.xlsx", "w") as excel_zip:
-            with pd.ExcelWriter(excel_zip) as excel:
-                markersummary.to_excel(excel, sheet_name="Markers summary")
-                summary.to_excel(excel, sheet_name="Analysis summary")
-                table.to_excel(excel, sheet_name="Assignments")
+        run = LOPITRun.from_dataframe(file.stem, df)
+        return Analysis(run, marker_factory)
+
+    def __getitem__(self, geneid: str):
+        try:
+            gene = self.run.genes[geneid]
+        except KeyError:
+            raise KeyError(f"Gene {geneid} not found.")
+        gene_description = gene.description
+
+        tsne_xy = self.tsne[geneid]
+        marker = self.markers[geneid]
+        unsupervised_cluster = self.clusters[geneid]
+        if self.clusters.was_assigned(geneid):
+            unsupervised_label = (
+                self.clusters.get_presentation_label(unsupervised_cluster))
+        else:
+            unsupervised_label = None
+        tagm_label = self.assigned[geneid]
+        tagm_confidence = self.assigned.get_confidence(geneid)
+
+        return LOPITAnalysisResult(
+            geneid,
+            gene_description,
+            tsne_xy,
+            marker,
+            unsupervised_cluster,
+            unsupervised_label,
+            tagm_label,
+            tagm_confidence,
+        )
+
+    def __iter__(self):
+        return iter(self.run.genes)
+
+    def __len__(self):
+        return len(self.run.genes)
+
+    def to_dataframe(self):
+        return pd.DataFrame.from_records(
+            list(self.values()),
+            columns=LOPITAnalysisResult._fields,
+        ).set_index("gene_id")
+
+    def save(self, path: pathlib.Path = pathlib.Path(".")):
+        path = pathlib.Path(path)
+        run_name = self.run.name
+
+        with ZipFile(path / (run_name + ".zip"), "w") as zip:
+            self.tsne.to_png(zip.open(f"{run_name}_tsne.png", "w"))
+            self.markers.to_png(zip.open(f"{run_name}_markers.png", "w"))
+            self.clusters.to_png(
+                zip.open(f"{run_name}_unsupervised_clusters.png", "w"))
+            self.assigned.to_png(
+                zip.open(f"{run_name}_supervised_clusters.png", "w"))
+            with zip.open(f"{run_name}_results.xlsx", "w") as excel_zip:
+                with pd.ExcelWriter(excel_zip) as excel:
+                    self.to_dataframe().to_excel(excel, sheet_name="Results")
 
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("name", type=str)
     parser.add_argument("lopit_data", type=pathlib.Path)
-
     args = parser.parse_args()
-
-    df = pd.read_csv(args.lopit_data) #.set_index("geneid").iloc[:, :44]
-    tmt_re = "|".join(DEFAULT_TMT_LABELS)
-    columns_re = re.compile(rf"Abundances \(Grouped\): (?P<experiment>[A-Z]), (?P<tmt>{tmt_re})$")
-    relevant_columns = {"UniProt Entry Name": "geneid"}
-    for column in df.columns:
-        if m := columns_re.match(column):
-            relevant_columns[column] = (m["experiment"], m["tmt"])
-    df = df.loc[:, list(relevant_columns)]
-    df.columns = list(relevant_columns.values())
-    df.loc[:, "geneid"] = df.geneid.str.replace("-t42_1-p1", "")
-    df = df.set_index("geneid").fillna(0.0)
-    df.columns = pd.MultiIndex.from_tuples(df.columns.tolist(), names=("experiment", "tmt_label"))
-    df = df.stack("experiment", future_stack=True)
-    df: pd.DataFrame = (df.T / df.sum(axis=1)).T
-    df = df.unstack("experiment")
-    df = df[df.notna().all(axis=1)].stack("experiment", future_stack=True)
-
-    analysis(args.name, df)
+    analysis = Analysis.from_csv(args.lopit_data)
+    analysis.save()
