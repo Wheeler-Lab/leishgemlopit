@@ -40,7 +40,7 @@ class TSNEAnalysis(Mapping[str, TSNEPoint], PNGMixin):
     def __len__(self):
         return len(self._data)
 
-    def to_dataframe(self):
+    def to_dataframe(self, include_tsne=True):
         return pd.DataFrame(
             [
                 {

@@ -1,14 +1,8 @@
-import io
-from typing import Mapping
-
-from cycler import cycler
-from matplotlib import pyplot as plt
-from matplotlib.markers import MarkerStyle
 import pandas as pd
 
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
-from leishgemlopit.utils import PNGMixin
+from leishgemlopit.utils import TSNEPlotMixin
 
 
 class MarkerGenerator:
@@ -20,7 +14,7 @@ class MarkerFactory:
     def __init__(self, generators: list[MarkerGenerator]):
         self.generators = generators
 
-    def __call__(self, gene_id):
+    def __call__(self, gene_id) -> set[str]:
         terms = set()
         for generator in self.generators:
             terms |= generator(gene_id)
@@ -39,7 +33,7 @@ class MarkerFactory:
         return terms
 
 
-class Markers(Mapping[str, set[str]], PNGMixin):
+class Markers(TSNEPlotMixin):
     def __init__(
         self,
         marker_factory: MarkerFactory,
@@ -54,7 +48,12 @@ class Markers(Mapping[str, set[str]], PNGMixin):
         self.tsne_analysis = tsne_analysis
 
     def __getitem__(self, gene_id: str):
-        return self._data[gene_id]
+        markers = self._data[gene_id]
+        if len(markers) > 1:
+            raise ValueError("A gene should only have a single marker annotation.")
+        elif len(markers) == 0:
+            return None
+        return next(iter(markers))
 
     def __iter__(self):
         return iter(self._data)
@@ -62,7 +61,7 @@ class Markers(Mapping[str, set[str]], PNGMixin):
     def __len__(self):
         return len(self._data)
 
-    def to_dataframe(self):
+    def to_dataframe(self, include_tsne=True):
         entries: dict[str, str] = []
         for gene_id, markers in self.items():
             for marker in markers:
@@ -71,62 +70,11 @@ class Markers(Mapping[str, set[str]], PNGMixin):
                     "marker": marker,
                 })
         df = pd.DataFrame(entries).set_index("geneid")
-        if self.tsne_analysis is not None:
+
+        if include_tsne and self.tsne_analysis is not None:
             return df.join(self.tsne_analysis.to_dataframe(), how="outer")
+
         return df
-
-    def _figure(self):
-        if self.tsne_analysis is None:
-            raise ValueError("Need a TSNEAnalysis to produce figure.")
-        fig, ax = plt.subplots(1, 1, figsize=(10, 6), dpi=150)
-        fig.subplots_adjust(left=0, bottom=0, right=0.6, top=1)
-
-        df = self.to_dataframe()
-        nomarkers = df[df.marker.isna()]
-        markers = df[df.marker.notna()]
-        ax.scatter(
-            nomarkers.x, nomarkers.y,
-            s=1,
-            marker=MarkerStyle("o", fillstyle="none"),
-            linewidth=0.5,
-            color="grey",
-        )
-
-        styles = iter(
-            cycler(marker=["o", "x", "v", "^"]) *
-            cycler(color=plt.colormaps["tab10"].colors)
-        )
-
-        for marker, g in (
-            sorted(markers.groupby("marker"), key=lambda g: -g[1].shape[0])
-        ):
-            style = next(styles)
-            ax.scatter(
-                g.x, g.y,
-                s=10,
-                marker=MarkerStyle(style["marker"], fillstyle="none"),
-                linewidth=1,
-                label=marker,
-                color=style["color"],
-            )
-
-        ax.axis("off")
-        ax.legend(
-            frameon=False,
-            bbox_to_anchor=(1, 1),
-            loc="upper left",
-        )
-
-        return fig
-
-    def _repr_png_(self):
-        figure = self._figure()
-        png_bytes = io.BytesIO()
-        with png_bytes:
-            figure.savefig(png_bytes, format="png")
-            ret_value = png_bytes.getvalue()
-        plt.close(figure)
-        return ret_value
 
     def summary(self):
         return MarkerSummary(self)

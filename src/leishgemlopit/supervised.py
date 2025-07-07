@@ -1,10 +1,8 @@
+from __future__ import annotations
+
 from collections import defaultdict
-import io
 from typing import Mapping, NamedTuple
 
-from cycler import cycler
-from matplotlib import pyplot as plt
-from matplotlib.markers import MarkerStyle
 import pandas as pd
 from sklearn.preprocessing import QuantileTransformer
 
@@ -14,7 +12,7 @@ from leishgemlopit.tsne import TSNEAnalysis
 
 from tagm import TAGMMAP
 
-from leishgemlopit.utils import PNGMixin
+from leishgemlopit.utils import TSNEPlotMixin
 
 
 class TAGMResult(NamedTuple):
@@ -22,7 +20,7 @@ class TAGMResult(NamedTuple):
     probability: float
 
 
-class SupervisedTAGM(Mapping[str, TAGMResult], PNGMixin):
+class SupervisedTAGM(TSNEPlotMixin):
     def __init__(
         self,
         lopit_experiment: LOPITExperiment,
@@ -47,8 +45,7 @@ class SupervisedTAGM(Mapping[str, TAGMResult], PNGMixin):
                     "geneid": geneid,
                     "marker": marker
                 }
-                for geneid, markers in self.markers.items()
-                for marker in markers
+                for geneid, marker in self.markers.items()
             ])
             .groupby("geneid").first()
         )
@@ -61,7 +58,6 @@ class SupervisedTAGM(Mapping[str, TAGMResult], PNGMixin):
 
         tagm = TAGMMAP(
             max_iter=1000,
-
             trust_training_data_implicitly=True,
         )
         probability = pd.DataFrame(
@@ -103,65 +99,14 @@ class SupervisedTAGM(Mapping[str, TAGMResult], PNGMixin):
                 self.tsne_analysis.to_dataframe(), how="outer")
         return labels
 
-    def _figure(self):
-        if self.tsne_analysis is None:
-            raise ValueError("Need a TSNEAnalysis to produce figure.")
-
-        fig, ax = plt.subplots(1, 1, figsize=(10, 6), dpi=150)
-        fig.subplots_adjust(left=0, bottom=0, right=0.6, top=1)
-
-        df = self.to_dataframe()
-        v = (df.label == "unknown") | (df.probability < 0.5)
-        nolabel = df[v]
-        labels = df[~v]
-        ax.scatter(
-            nolabel.x, nolabel.y,
-            s=1,
-            marker=MarkerStyle("o", fillstyle="none"),
-            linewidth=0.5,
-            color="black",
-        )
-
-        styles = iter(
-            cycler(marker=["o", "x", "v", "^"]) *
-            cycler(color=plt.colormaps["tab10"].colors)
-        )
-
-        for label, g in (
-            sorted(labels.groupby("label"), key=lambda g: -g[1].shape[0])
-        ):
-            style = next(styles)
-            ax.scatter(
-                g.x, g.y,
-                s=10,
-                marker=MarkerStyle(style["marker"], fillstyle="none"),
-                linewidth=1,
-                label=label,
-                color=style["color"],
-            )
-
-        ax.axis("off")
-
-        ax.legend(
-            frameon=False,
-            bbox_to_anchor=(1, 1),
-            loc="upper left",
-        )
-
-        return fig
-
-    def _repr_png_(self):
-        figure = self._figure()
-        png_bytes = io.BytesIO()
-        with png_bytes:
-            figure.savefig(png_bytes, format="png")
-            ret_value = png_bytes.getvalue()
-        plt.close(figure)
-        return ret_value
-
 
 class TAGMResultCollection(Mapping[str, TAGMResult]):
-    def __init__(self, results: dict[LOPITExperiment, TAGMResult]):
+    def __init__(
+        self,
+        geneid: str,
+        results: dict[LOPITExperiment, TAGMResult]
+    ):
+        self.geneid = geneid
         self._results = {
             experiment.name: result
             for experiment, result in results.items()
@@ -176,7 +121,7 @@ class TAGMResultCollection(Mapping[str, TAGMResult]):
     def __len__(self):
         return len(self._results)
 
-    def assign(self):
+    def assign(self) -> tuple[str, float]:
         probsum = defaultdict[str, float](lambda: 0.0)
         for result in self.values():
             probsum[result.label] += result.probability
@@ -189,12 +134,24 @@ class TAGMResultCollection(Mapping[str, TAGMResult]):
         term, confidence = max(
             confidences.items(), key=lambda e: e[0])
 
-        if confidence < 0.95:
-            return "unknown"
-        return term
+        if confidence < 0.5:
+            return "unknown", -1
+        return term, confidence
+
+    def _representation(self):
+        return (self.geneid, tuple(self.values()))
+
+    def __hash__(self):
+        return hash(self._representation())
+
+    def __lt__(self, other: TAGMResultCollection):
+        return self._representation() < other._representation()
+
+    def __eq__(self, other: TAGMResultCollection):
+        return self._representation() == other._representation()
 
 
-class SupervisedTAGMCollection(Mapping[str, TAGMResultCollection], PNGMixin):
+class SupervisedTAGMCollection(TSNEPlotMixin):
     def __init__(
         self,
         lopit_experiments: LOPITExperimentCollection,
@@ -218,85 +175,49 @@ class SupervisedTAGMCollection(Mapping[str, TAGMResultCollection], PNGMixin):
                 results[geneid][experiment] = result
 
         self._results = {
-            geneid: TAGMResultCollection(r)
+            geneid: TAGMResultCollection(geneid, r)
             for geneid, r in results.items()
         }
 
+        labels = {
+            geneid: result.assign()[0]
+            for geneid, result in self._results.items()
+        }
+        self._labels = {
+            geneid: label for geneid, label in labels.items()
+        }
+
     def __getitem__(self, gene_id: str):
-        return self._results[gene_id]
+        return self._labels[gene_id]
+
+    def was_assigned(self, gene_id: str):
+        return self._labels[gene_id] != "unknown"
 
     def __iter__(self):
-        return iter(self._results)
+        return iter(self._labels)
 
     def __len__(self):
-        return len(self._results)
+        return len(self._labels)
 
-    def to_dataframe(self):
-        labels = pd.DataFrame([
-            {
+    def to_dataframe(self, include_tsne=True):
+        data = []
+        for geneid, result in self.items():
+            label, confidence = result.assign()
+            is_unknown = label == ""
+            entry = {
                 "geneid": geneid,
-                "label": res.assign(),
+                "label": "" if is_unknown else label,
+                "confidence": "" if is_unknown else confidence,
             }
-            for geneid, res in self.items()
-        ]).set_index("geneid")
+            entry.update({
+                f"{experiment}_{key}": value
+                for experiment, exp_result in result.items()
+                for key, value in (("label", exp_result.label), ("probability", exp_result.probability))
+            })
+            data.append(entry)
+        labels = pd.DataFrame(data).set_index("geneid")
 
-        if self.tsne_analysis is not None:
+        if include_tsne and self.tsne_analysis is not None:
             return labels.join(
                 self.tsne_analysis.to_dataframe(), how="outer")
         return labels
-
-    def _figure(self):
-        if self.tsne_analysis is None:
-            raise ValueError("Need a TSNEAnalysis to produce figure.")
-
-        fig, ax = plt.subplots(1, 1, figsize=(10, 6), dpi=150)
-        fig.subplots_adjust(left=0, bottom=0, right=0.6, top=1)
-
-        df = self.to_dataframe()
-        v = df.label == "unknown"
-        nolabel = df[v]
-        labels = df[~v]
-        ax.scatter(
-            nolabel.x, nolabel.y,
-            s=1,
-            marker=MarkerStyle("o", fillstyle="none"),
-            linewidth=0.5,
-            color="black",
-        )
-
-        styles = iter(
-            cycler(marker=["o", "x", "v", "^"]) *
-            cycler(color=plt.colormaps["tab10"].colors)
-        )
-
-        for label, g in (
-            sorted(labels.groupby("label"), key=lambda g: -g[1].shape[0])
-        ):
-            style = next(styles)
-            ax.scatter(
-                g.x, g.y,
-                s=10,
-                marker=MarkerStyle(style["marker"], fillstyle="none"),
-                linewidth=1,
-                label=label,
-                color=style["color"],
-            )
-
-        ax.axis("off")
-
-        ax.legend(
-            frameon=False,
-            bbox_to_anchor=(1, 1),
-            loc="upper left",
-        )
-
-        return fig
-
-    def _repr_png_(self):
-        figure = self._figure()
-        png_bytes = io.BytesIO()
-        with png_bytes:
-            figure.savefig(png_bytes, format="png")
-            ret_value = png_bytes.getvalue()
-        plt.close(figure)
-        return ret_value

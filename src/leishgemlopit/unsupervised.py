@@ -1,11 +1,6 @@
-from collections import Counter
-import io
-from typing import Mapping
+from collections import Counter, defaultdict
 import warnings
 
-from cycler import cycler
-from matplotlib import pyplot as plt
-from matplotlib.markers import MarkerStyle
 import pandas as pd
 from hdbscan import HDBSCAN
 from sklearn.preprocessing import StandardScaler
@@ -14,15 +9,12 @@ from leishgemlopit.lopit import LOPITExperimentCollection
 from leishgemlopit.markers import Markers
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
-from leishgemlopit.utils import PNGMixin
+from leishgemlopit.utils import TSNEPlotMixin
 
 
-def most_common_marker(g: pd.Series):
-    c = Counter[str](g)
-
+def most_common_marker(c: Counter[str]):
     markers = {
-        m for m in c
-        if c[m] > 1 and m != "unknown"
+        m for m in c if c[m] > 1 and m != "unknown"
     }
     markers_no_bg = markers - ANNOTATIONS_BACKGROUND_LIKE
     if markers_no_bg:
@@ -34,12 +26,12 @@ def most_common_marker(g: pd.Series):
     return "unknown"
 
 
-class UnsupervisedHDBSCAN(Mapping[str, str], PNGMixin):
+class UnsupervisedHDBSCAN(TSNEPlotMixin):
     def __init__(
         self,
         lopit_experiments: LOPITExperimentCollection,
+        markers: Markers,
         tsne_analysis: TSNEAnalysis | None = None,
-        markers: Markers | None = None,
         vote_threshold: float = 0.25,
         min_samples: int = 5,
         min_cluster_size: int = 5,
@@ -75,109 +67,52 @@ class UnsupervisedHDBSCAN(Mapping[str, str], PNGMixin):
                 name="cluster",
             )
 
-        self._data: dict[str, int] = {
+        self._clusters: dict[str, int] = {
             geneid: cluster for geneid, cluster in clusters.items()
         }
 
-        if self.markers is not None:
-            markers = pd.Series({
-                geneid: marker
-                for geneid in clusters.index
-                for marker in self.markers[geneid]
-            }).to_frame("marker")
-
-            markers = markers.join(
-                clusters[clusters >= 0],
-                how="right").fillna("unknown")
-            markers = (
-                markers.groupby("cluster").marker.apply(most_common_marker)
-            )
-            self._markers = {
-                cluster: marker for cluster, marker in markers.items()
-            }
-        else:
-            self._markers = {}
+        label_candidates = defaultdict[int, Counter[str]](Counter[str])
+        for geneid, cluster in self._clusters.items():
+            marker = self.markers[geneid]
+            if marker is None:
+                marker = "unknown"
+            label_candidates[cluster][marker] += 1
+        self._labels = {
+            cluster: most_common_marker(counter)
+            for cluster, counter in label_candidates.items()
+        }
 
     def __getitem__(self, gene_id: str):
-        return self._data[gene_id]
+        return self._clusters[gene_id]
+
+    def get_presentation_label(self, label: int):
+        return self._labels[label]
+
+    def was_assigned(self, gene_id: str):
+        return self._clusters[gene_id] >= 0
 
     def __iter__(self):
-        return iter(self._data)
+        return iter(self._clusters)
 
     def __len__(self):
-        return len(self._data)
+        return len(self._clusters)
 
-    def to_dataframe(self):
-        clusters = pd.Series(self._data, name="cluster").to_frame()
-        if self.tsne_analysis is not None:
+    def to_dataframe(self, include_tsne=True):
+        clusters = pd.DataFrame(
+            [
+                {
+                    "geneid": geneid,
+                    "cluster": cluster,
+                    "label": self._labels[cluster] if cluster in self._labels else "",
+                }
+                for geneid, cluster in self.items()
+            ]
+        ).set_index("geneid")
+
+        if include_tsne and self.tsne_analysis is not None:
             return clusters.join(
                 self.tsne_analysis.to_dataframe(), how="outer")
         return clusters
-
-    def _figure(self):
-        if self.tsne_analysis is None:
-            raise ValueError("Need a TSNEAnalysis to produce figure.")
-        if self._markers:
-            width = 10
-            right = 0.6
-        else:
-            width = 6
-            right = 1
-        fig, ax = plt.subplots(1, 1, figsize=(width, 6), dpi=150)
-        fig.subplots_adjust(left=0, bottom=0, right=right, top=1)
-
-        df = self.to_dataframe()
-        nocluster = df[df.cluster < 0]
-        clusters = df[df.cluster >= 0]
-        ax.scatter(
-            nocluster.x, nocluster.y,
-            s=1,
-            marker=MarkerStyle("o", fillstyle="none"),
-            linewidth=0.5,
-            color="black",
-        )
-
-        styles = iter(
-            cycler(marker=["o", "x", "v", "^"]) *
-            cycler(color=plt.colormaps["tab10"].colors)
-        )
-
-        for cluster, g in (
-            sorted(clusters.groupby("cluster"), key=lambda g: -g[1].shape[0])
-        ):
-            style = next(styles)
-            try:
-                label = self._markers[cluster]
-            except KeyError:
-                label = str(cluster)
-            ax.scatter(
-                g.x, g.y,
-                s=10,
-                marker=MarkerStyle(style["marker"], fillstyle="none"),
-                linewidth=1,
-                label=label,
-                color=style["color"],
-            )
-
-        ax.axis("off")
-
-        if self._markers:
-            ax.legend(
-                frameon=False,
-                bbox_to_anchor=(1, 1),
-                loc="upper left",
-            )
-
-        return fig
-
-    def _repr_png_(self):
-        figure = self._figure()
-        png_bytes = io.BytesIO()
-        with png_bytes:
-            figure.savefig(png_bytes, format="png")
-            ret_value = png_bytes.getvalue()
-        plt.close(figure)
-        return ret_value
 
     def summary(self):
         genes_assigned = [g for g, c in self.items() if c >= 0]
