@@ -5,6 +5,8 @@ from weakref import WeakValueDictionary
 import numpy as np
 import pandas as pd
 
+from orthomcl import OrthoMCL
+
 DEFAULT_TMT_LABELS = [
     "126",
     "127C",
@@ -23,12 +25,17 @@ DEFAULT_TMT_LABELS = [
 class Gene:
     gene_id: str
     data_entries: dict[LOPITExperiment, LOPITDataEntry]
+    description: str | None
 
     _CACHE: dict[str, Gene] = WeakValueDictionary()
 
     def __init__(self, gene_id: str):
         self.gene_id = gene_id
         self.data_entries = {}
+        try:
+            self.description = OrthoMCL.get_entry(gene_id).description
+        except KeyError:
+            self.description = None
 
         if gene_id in Gene._CACHE:
             raise ValueError("Gene is already cached, why am I being created?")
@@ -76,7 +83,7 @@ class LOPITDataEntry:
         ).rename_axis(index="tmt_label")
 
 
-class LOPITExperiment(Mapping):
+class LOPITExperiment(Mapping[Gene, LOPITDataEntry]):
     def __init__(self, run: LOPITRun, name: str):
         self.run = run
         self.name = name
@@ -121,7 +128,7 @@ class LOPITExperiment(Mapping):
         )
 
 
-class LOPITExperimentCollection(Mapping):
+class LOPITExperimentCollection(Mapping[str, LOPITExperiment]):
     def __init__(self, experiments: list[LOPITExperiment]):
         self._experiments = {
             experiment.name: experiment for experiment in experiments
