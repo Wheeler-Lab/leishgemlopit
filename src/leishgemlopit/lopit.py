@@ -89,6 +89,12 @@ class LOPITDataEntry:
             name=(self.gene.gene_id, self.experiment.name)
         ).rename_axis(index="tmt_label")
 
+    def to_dict(self) -> dict[str, float]:
+        return {
+            label: value
+            for label, value in zip(self.labels, self.data)
+        }
+
 
 class LOPITExperiment(Mapping[Gene, LOPITDataEntry]):
     def __init__(self, run: LOPITRun, name: str):
