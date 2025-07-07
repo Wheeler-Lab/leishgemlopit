@@ -200,7 +200,10 @@ class LOPITRun(LOPITExperimentCollection):
         fraction = count / total
         if fraction < 0.75:
             return None
-        return OrthoMCL.get_organism_info(most_common)
+        try:
+            return OrthoMCL.get_organism_info(most_common)
+        except KeyError:
+            return None
 
     @staticmethod
     def from_csv(
