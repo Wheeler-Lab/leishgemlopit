@@ -38,9 +38,9 @@ class Gene:
             orthomcl_entry = OrthoMCL.get_entry(gene_id)
             self.description = orthomcl_entry.description
             self.organism = orthomcl_entry.organism
-
         except KeyError:
             self.description = None
+            self.organism = None
 
         if gene_id in Gene._CACHE:
             raise ValueError("Gene is already cached, why am I being created?")
