@@ -121,8 +121,6 @@ LmxM.08_29.2550,chromatin associated complex
 LmxM.08_29.2860,ribosome
 LmxM.09.0050,RNA pol complexes
 LmxM.09.0220,acidocalcisome
-LmxM.09.0230,proteasome
-LmxM.09.0230,proteasome
 LmxM.09.0270,acidocalcisome
 LmxM.09.0400,Kinetochore
 LmxM.09.0410,Kinetochore
@@ -198,8 +196,6 @@ LmxM.14.1270,ribosome
 LmxM.14.1440,RNA pol complexes
 LmxM.15.0010,RNA pol complexes
 LmxM.15.0080,mitochondrial ribosome
-LmxM.15.0090,proteasome
-LmxM.15.0090,proteasome
 LmxM.15.0200,ribosome
 LmxM.15.0200,ribosome
 LmxM.15.0220,chromatin associated complex
@@ -744,9 +740,6 @@ LmxM.36.3760,ribosome
 LmxM.36.3760,ribosome
 LmxM.36.3980,chromatin associated complex
 LmxM.36.3980,chromatin associated complex
-LmxM.36.3990,proteasome
-LmxM.36.3990,proteasome
-LmxM.36.3990,proteasome
 LmxM.36.4120,mitochondrial ribosome
 LmxM.36.4280,Pre-mRNA Splicing Machinery
 LmxM.36.4360,proteasome
