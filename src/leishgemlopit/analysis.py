@@ -65,6 +65,9 @@ def DEFAULT_MARKER_FACTORY():
             "mitochondrial ribosome", FIXTURE_PATH / "brucei.mitoribo.txt"),
         LmexMultiSheetExcelMarkerTermFile(
             FIXTURE_PATH / "leishmania_mexicana_additional_markers.csv",
+        ),
+        LmexMultiSheetExcelMarkerTermFile(
+            FIXTURE_PATH / "trypanosoma_cruzi_additional_markers.csv",
         )
     ])
 
