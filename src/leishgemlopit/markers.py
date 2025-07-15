@@ -1,12 +1,76 @@
+from __future__ import annotations
+from enum import Enum
+from collections import Counter
 import pandas as pd
+from orthomcl import OrthoMCL
 
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
 from leishgemlopit.tsne import TSNEAnalysis
 from leishgemlopit.utils import TSNEPlotMixin
 
 
+class MarkerConfidence(Enum):
+    BACKGROUND_LIKE = 1
+    REASONABLE = 2
+    EXCELLENT = 3
+
+
+class Marker:
+    def __init__(
+        self,
+        term: str,
+        source: str,
+        confidence: MarkerConfidence | None = None,
+    ):
+        self.term = term
+        self.source = source
+
+        if confidence is None:
+            if self.term in ANNOTATIONS_BACKGROUND_LIKE:
+                self.confidence = MarkerConfidence.BACKGROUND_LIKE
+            else:
+                self.confidence = MarkerConfidence.REASONABLE
+        else:
+            self.confidence = confidence
+
+
+class MarkerCollection:
+    def __init__(self, geneid: str, markers: list[Marker] | None = None):
+        self.geneid = geneid
+        self.markers: list[Marker] = markers if markers else []
+
+    def add_marker(self, marker: Marker):
+        self.markers.append(marker)
+
+    def finalise(self, use_multiples=True):
+        if not self.markers:
+            return None
+        candidates = Counter[str]()
+        for marker in self.markers:
+            candidates[marker.term] += marker.confidence.value
+        if (not use_multiples) and (len(candidates) > 1):
+            terms = set(candidates)
+            if not ANNOTATIONS_BACKGROUND_LIKE.issuperset(terms):
+                terms = terms.difference(ANNOTATIONS_BACKGROUND_LIKE)
+                if len(terms) > 1:
+                    return None
+                return list(terms)[0]
+            return None
+
+        return candidates.most_common(1)[0][0]
+
+    def merge(self, other: MarkerCollection):
+        if self.geneid != other.geneid:
+            raise ValueError(
+                "Cannot merge MarkerCollections belonging to different genes!")
+        self.markers.extend(other.markers)
+
+
 class MarkerGenerator:
-    def __call__(self, gene_id: str) -> set[str]:
+    def all_orthologs_of(self, gene_id: str):
+        return {entry.gene_id for entry in OrthoMCL[gene_id].entries}
+
+    def __call__(self, gene_id: str) -> MarkerCollection:
         raise NotImplementedError
 
 
@@ -14,23 +78,18 @@ class MarkerFactory:
     def __init__(self, generators: list[MarkerGenerator]):
         self.generators = generators
 
-    def __call__(self, gene_id) -> set[str]:
-        terms = set()
+    def __call__(self, gene_id):
+        return self.marker_evidence(gene_id).finalise()
+
+    def marker_evidence(self, gene_id: str) -> MarkerCollection:
+        markers = None
         for generator in self.generators:
-            terms |= generator(gene_id)
-        return self._filter_multiple(
-            self._filter_background_like(terms))
-
-    @staticmethod
-    def _filter_background_like(terms: set[str]):
-        if ANNOTATIONS_BACKGROUND_LIKE.issuperset(terms):
-            return terms
-        return terms.difference(ANNOTATIONS_BACKGROUND_LIKE)
-
-    def _filter_multiple(self, terms: set[str]):
-        if len(terms) > 1:
-            return set()
-        return terms
+            mc = generator(gene_id)
+            if markers is None:
+                markers = mc
+            else:
+                markers.merge(mc)
+        return markers
 
 
 class Markers(TSNEPlotMixin):
@@ -40,20 +99,20 @@ class Markers(TSNEPlotMixin):
         gene_ids: list[str],
         tsne_analysis: TSNEAnalysis | None = None,
     ):
-        self._data = {
-            gene_id: marker_factory(gene_id)
+        self._evidence = {
+            gene_id: marker_factory.marker_evidence(gene_id)
             for gene_id in gene_ids
+        }
+        self._data = {
+            gene_id: evidence.finalise()
+            for gene_id, evidence in
+            self._evidence.items()
         }
 
         self.tsne_analysis = tsne_analysis
 
     def __getitem__(self, gene_id: str):
-        markers = self._data[gene_id]
-        if len(markers) > 1:
-            raise ValueError("A gene should only have a single marker annotation.")
-        elif len(markers) == 0:
-            return None
-        return next(iter(markers))
+        return self._data[gene_id]
 
     def __iter__(self):
         return iter(self._data)
@@ -61,18 +120,40 @@ class Markers(TSNEPlotMixin):
     def __len__(self):
         return len(self._data)
 
-    def to_dataframe(self, include_tsne=True):
-        entries: dict[str, str] = []
-        for gene_id, markers in self.items():
-            for marker in markers:
+    def to_dataframe(self):
+        entries: list[dict] = []
+        for gene_id, markers in self._evidence.items():
+            try:
+                description = OrthoMCL.get_entry(gene_id).description
+            except KeyError:
+                description = ""
+            if len(markers.markers) > 0:
+                for marker in markers.markers:
+                    confidence = (
+                        f"{marker.confidence.value} - "
+                        f"{marker.confidence.name}"
+                    )
+                    entries.append({
+                        "geneid": gene_id,
+                        "description": description,
+                        "category": "evidence",
+                        "term": marker.term,
+                        "source": marker.source,
+                        "confidence": confidence,
+                    })
                 entries.append({
                     "geneid": gene_id,
-                    "marker": marker,
+                    "description": description,
+                    "category": "term chosen",
+                    "term": markers.finalise(),
+                    "source": "",
+                    "confidence": "",
                 })
-        df = pd.DataFrame(entries).set_index("geneid")
-
-        if include_tsne and self.tsne_analysis is not None:
-            return df.join(self.tsne_analysis.to_dataframe(), how="outer")
+        df = (
+            pd.DataFrame(entries)
+            .set_index(["geneid", "description", "category"])
+            .sort_index()
+        )
 
         return df
 

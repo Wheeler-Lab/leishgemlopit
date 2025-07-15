@@ -8,7 +8,12 @@ from tryptag import CellLine, GeneNotFoundError, TrypTag
 from tryptag.datasource import CellLineStatus
 
 from leishgemlopit.constants import ANNOTATIONS_BACKGROUND_LIKE
-from leishgemlopit.markers import MarkerGenerator
+from leishgemlopit.markers import (
+    MarkerCollection,
+    MarkerConfidence,
+    MarkerGenerator,
+    Marker,
+)
 
 from orthomcl import OrthoMCL
 
@@ -93,7 +98,7 @@ class TrypTagMarkerFactory(MarkerGenerator):
 
     def get_tryptag_localisations(self, gene_id: str):
         treu927_entries = OrthoMCL[gene_id]["tbrt"]
-        localisation_list: set[str] = set()
+        localisation_list = set[str]()
         for treu927_entry in treu927_entries:
             try:
                 tt_gene = self.tryptag.gene_list[treu927_entry.gene_id]
@@ -136,7 +141,21 @@ class TrypTagMarkerFactory(MarkerGenerator):
                     else:
                         localisations.add("cytoplasm")
                 localisation_list = localisation_list | localisations
-        return self.remove_background_like(localisation_list)
+
+        localisation_list = self.remove_background_like(localisation_list)
+        return MarkerCollection(
+            gene_id,
+            [
+                Marker(
+                    term,
+                    "TrypTag",
+                    MarkerConfidence.BACKGROUND_LIKE
+                    if term in ANNOTATIONS_BACKGROUND_LIKE
+                    else MarkerConfidence.REASONABLE,
+                )
+                for term in localisation_list
+            ]
+        )
 
     def remap_annotations(self, localisations: set[str]):
         new_terms: set[str] = set()

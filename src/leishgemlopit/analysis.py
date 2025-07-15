@@ -11,31 +11,46 @@ from .tsne import TSNEAnalysis, TSNEPoint
 from .unsupervised import UnsupervisedHDBSCAN
 from .lopit import Gene, LOPITRun
 from .tryptag import TrypTagMarkerFactory
-from .markers import MarkerGenerator, MarkerFactory, Markers
-from orthomcl import OrthoMCL
+from .markers import (
+    MarkerGenerator,
+    MarkerCollection,
+    Marker,
+    MarkerConfidence,
+    Markers,
+    MarkerFactory,
+)
 
 import pandas as pd
 
 
-class TBruceiMarkerTermFile(MarkerGenerator):
-    def __init__(self, term: str, filename: pathlib.Path):
+class SingleMarkerTermFile(MarkerGenerator):
+    def __init__(
+        self,
+        term: str,
+        filename: pathlib.Path,
+        source: str,
+    ):
         self.term = term
         with filename.open("r") as f:
             self.gene_ids = {
                 gene_id.strip() for gene_id in f
             }
+        self.source = source
 
     def __call__(self, gene_id):
-        treu927_ids = {
-            entry.gene_id for entry in OrthoMCL[gene_id]["tbrt"]
-        }
-        if not treu927_ids.isdisjoint(self.gene_ids):
-            return {self.term}
-        return set()
+        ortholog_ids = self.all_orthologs_of(gene_id)
+        if not ortholog_ids.isdisjoint(self.gene_ids):
+            return MarkerCollection(
+                gene_id,
+                [
+                    Marker(self.term, self.source, MarkerConfidence.EXCELLENT)
+                ],
+            )
+        return MarkerCollection(gene_id)
 
 
-class LmexMultiSheetExcelMarkerTermFile(MarkerGenerator):
-    def __init__(self, filename: pathlib.Path):
+class MultiMarkerTermFile(MarkerGenerator):
+    def __init__(self, filename: pathlib.Path, source: str):
         terms = defaultdict(set)
 
         additional_markers = pd.read_csv(filename).set_index("geneid").term
@@ -45,29 +60,41 @@ class LmexMultiSheetExcelMarkerTermFile(MarkerGenerator):
 
         self.terms = dict(terms)
 
+        self.source = source
+
     def __call__(self, gene_id: str):
-        lmex_ids = {
-            entry.gene_id for entry in OrthoMCL[gene_id]["lmex"]
-        }
-        terms: set[str] = set()
-        for lmex_id in lmex_ids:
-            if lmex_id in self.terms:
-                terms |= self.terms[lmex_id]
-        return terms
+        ortholog_ids = self.all_orthologs_of(gene_id)
+        markers = MarkerCollection(gene_id)
+        for ortholog_id in ortholog_ids:
+            if ortholog_id in self.terms:
+                for term in self.terms[ortholog_id]:
+                    markers.add_marker(
+                        Marker(
+                            term,
+                            self.source,
+                            MarkerConfidence.EXCELLENT,
+                        )
+                    )
+        return markers
 
 
 def DEFAULT_MARKER_FACTORY():
     return MarkerFactory([
         TrypTagMarkerFactory(),
-        TBruceiMarkerTermFile(
-            "ribosome", FIXTURE_PATH / "brucei.ribo.txt"),
-        TBruceiMarkerTermFile(
-            "mitochondrial ribosome", FIXTURE_PATH / "brucei.mitoribo.txt"),
-        LmexMultiSheetExcelMarkerTermFile(
-            FIXTURE_PATH / "leishmania_mexicana_additional_markers.csv",
+        SingleMarkerTermFile(
+            "ribosome", FIXTURE_PATH / "brucei.ribo.txt", "T. brucei ribosome"),
+        SingleMarkerTermFile(
+            "mitochondrial ribosome",
+            FIXTURE_PATH / "brucei.mitoribo.txt",
+            "T. brucei mitochondrial ribosome"
         ),
-        LmexMultiSheetExcelMarkerTermFile(
+        MultiMarkerTermFile(
+            FIXTURE_PATH / "leishmania_mexicana_additional_markers.csv",
+            "Eden's L. mexicana list",
+        ),
+        MultiMarkerTermFile(
             FIXTURE_PATH / "trypanosoma_cruzi_additional_markers.csv",
+            "Eden's T. cruzi list",
         )
     ])
 
@@ -165,6 +192,13 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
             with zip.open(f"{run_name}_results.xlsx", "w") as excel_zip:
                 with pd.ExcelWriter(excel_zip) as excel:
                     self.to_dataframe().to_excel(excel, sheet_name="Results")
+            with (
+                zip.open(f"{run_name}_marker_sources.xlsx", "w")
+                as markers_zip
+            ):
+                with pd.ExcelWriter(markers_zip) as excel:
+                    df = self.markers.to_dataframe()
+                    df.to_excel(excel, sheet_name="Markers")
 
 
 def cli():
