@@ -43,7 +43,7 @@ class PNGMixin:
         figure = self._figure()
         png_bytes = io.BytesIO()
         with png_bytes:
-            figure.savefig(png_bytes, format="png")
+            figure.savefig(png_bytes, format="png", bbox_inches="tight")
             ret_value = png_bytes.getvalue()
         plt.close(figure)
         return ret_value
