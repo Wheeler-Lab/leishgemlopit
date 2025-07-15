@@ -1,4 +1,5 @@
 {
+    "nucleus": "darkolivegreen2",
     "nuclear envelope": "springgreen1",
     "nucleolus": "darkolivegreen1",
     "nucleoplasm": "darkolivegreen4",
@@ -16,6 +17,9 @@
     "endocytic": "maroon2",
     "endoplasmic reticulum": "maroon4",
     "proteasome": "maroon3",
+    "reservosome": "magenta4",
+    "contractile vacuole": "magenta3",
+    "cytostome": "magenta2",
     "axoneme": "dodgerblue4",
     "basal body": "deepskyblue2",
     "flagellar pocket": "paleturquoise2",
@@ -27,6 +31,7 @@
     "glycosome": "orangered4",
     "acidocalcisome": "orangered1",
     "cortical cytoskeleton": "wheat1",
-    "cytoplasm": "salmon1"
+    "cytoplasm": "salmon1",
+    "membrane": "khaki3"
 }
 
