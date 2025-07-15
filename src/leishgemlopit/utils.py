@@ -87,7 +87,15 @@ class TSNEPlotMixin(PNGMixin, LabelMixin):
         for label, g in labels.groupby("label"):
             groups[self.get_presentation_label(label)].append(g)
 
-        for label in list(_CELL_COMPONENTS) + ["unknown"]:
+        component_list = list(_CELL_COMPONENTS) + ["unknown"]
+        nocolors = set(groups).difference(set(component_list))
+        if nocolors:
+            print(
+                "WARNING: The following components do not have a colour "
+                f"defined: {', '.join(nocolors)}. They will not be shown."
+            )
+
+        for label in component_list:
             for g in groups[label]:
                 style = styles(label)
                 ax.scatter(
