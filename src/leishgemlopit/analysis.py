@@ -1,12 +1,12 @@
 from collections import defaultdict
 from collections.abc import Mapping
 import argparse
+from dataclasses import dataclass
 import pathlib
-from typing import NamedTuple
 from zipfile import ZipFile
 
 from .constants import FIXTURE_PATH
-from .supervised import SupervisedTAGMCollection
+from .supervised import SupervisedTAGMCollection, TAGMResultCollection
 from .tsne import TSNEAnalysis, TSNEPoint
 from .unsupervised import UnsupervisedHDBSCAN
 from .lopit import Gene, LOPITRun
@@ -99,15 +99,33 @@ def DEFAULT_MARKER_FACTORY():
     ])
 
 
-class LOPITAnalysisResult(NamedTuple):
+@dataclass
+class LOPITAnalysisResult:
     gene_id: Gene
     gene_description: str | None
     tsne_xy: TSNEPoint
     marker: str | None
     unsupervised_cluster: int
     unsupervised_label: str | None
-    tagm_label: str
-    tagm_confidence: float
+    tagm_results: TAGMResultCollection
+
+    def to_row(self):
+        tagm_label, tagm_confidence = self.tagm_results.assign()
+        row = {
+            "gene_id": self.gene_id,
+            "gene_description": self.gene_description,
+            "tsne_x": self.tsne_xy.x,
+            "tsne_y": self.tsne_xy.y,
+            "marker": self.marker,
+            "unsupervised_cluster": self.unsupervised_cluster,
+            "unsupervised_label": self.unsupervised_label,
+            "tagm_label": tagm_label,
+            "tagm_conf": tagm_confidence,
+        }
+        for experiment_name, result in self.tagm_results.items():
+            row[f"tagm_{experiment_name}_label"] = result.label
+            row[f"tagm_{experiment_name}_probability"] = result.probability
+        return row
 
 
 class Analysis(Mapping[str, LOPITAnalysisResult]):
@@ -152,8 +170,7 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
                 self.clusters.get_presentation_label(unsupervised_cluster))
         else:
             unsupervised_label = None
-        tagm_label = self.assigned[geneid]
-        tagm_confidence = self.assigned.get_confidence(geneid)
+        tagm_results = self.assigned.get_tagm_results(geneid)
 
         return LOPITAnalysisResult(
             geneid,
@@ -162,8 +179,7 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
             marker,
             unsupervised_cluster,
             unsupervised_label,
-            tagm_label,
-            tagm_confidence,
+            tagm_results,
         )
 
     def __iter__(self):
@@ -173,10 +189,10 @@ class Analysis(Mapping[str, LOPITAnalysisResult]):
         return len(self.run.genes)
 
     def to_dataframe(self):
-        return pd.DataFrame.from_records(
-            list(self.values()),
-            columns=LOPITAnalysisResult._fields,
-        ).set_index("gene_id")
+        return pd.DataFrame([
+            entry.to_row()
+            for entry in self.values()
+        ]).set_index("gene_id")
 
     def save(self, path: pathlib.Path = pathlib.Path(".")):
         path = pathlib.Path(path)

@@ -192,6 +192,9 @@ class SupervisedTAGMCollection(TSNEPlotMixin):
             return self._labels[gene_id][1]
         return float("NaN")
 
+    def get_tagm_results(self, gene_id: str):
+        return self._results[gene_id]
+
     def was_assigned(self, gene_id: str):
         return self._labels[gene_id][0] != "unknown"
 
@@ -214,7 +217,10 @@ class SupervisedTAGMCollection(TSNEPlotMixin):
             entry.update({
                 f"{experiment}_{key}": value
                 for experiment, exp_result in result.items()
-                for key, value in (("label", exp_result.label), ("probability", exp_result.probability))
+                for key, value in (
+                    ("label", exp_result.label),
+                    ("probability", exp_result.probability)
+                )
             })
             data.append(entry)
         labels = pd.DataFrame(data).set_index("geneid")
